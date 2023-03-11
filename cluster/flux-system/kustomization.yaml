@@ -22,3 +22,4 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 - gotk-decryption.yaml
+- ./helm-charts/kustomization.yaml
