@@ -6,7 +6,7 @@ metadata:
     namespace: flux-system
 spec:
     interval: 5m
-    path: ./
+    path: ./cluster/flux-system
     prune: false
     sourceRef:
         kind: GitRepository
@@ -15,9 +15,6 @@ spec:
         provider: sops
         secretRef:
             name: sops-age
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
