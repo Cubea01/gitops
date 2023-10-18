@@ -1,0 +1,124 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: creative
+  namespace: minecraft
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    securityContext:
+      runAsUser: 1000
+    initContainers:
+      chown-sidecar:
+        image: busybox:latest
+        command: ["sh", "-c", "chown -R 1000:1000 /server"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: data
+            mountPath: /server
+        securityContext:
+          runAsUser: 0
+    controller:
+      type: deployment
+    image:
+      repository: itzg/minecraft-server
+      tag: java17-graalvm-ce
+    env:
+      UID: 1000
+      TZ: America/Anchorage
+      EULA: TRUE
+      SKIP_SERVER_PROPERTIES: TRUE
+      EXEC_DIRECTLY: TRUE
+      CUSTOM_SERVER: "/data/server.jar"
+      TYPE: CUSTOM
+      MEMORY: 6000M
+      JVM_XX_OPTS: "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1"
+      JVM_DD_OPTS: "using.aikars.flags=https://mcflags.emc.gs,aikars.new.flags=true"
+    service:
+      main:
+        ports:
+          http:
+            port: 0
+            enabled: false
+          minecraft:
+            enabled: true
+            port: 25565
+            protocol: TCP
+          rcon:
+            enabled: true
+            primary: false
+            port: 25575
+            protocol: TCP
+    persistence:
+      data:
+        enabled: true
+        type: pvc
+        accessMode: ReadWriteOnce
+        size: 100Gi
+        mountPath: /data
+        storageClass: iscsi-csi
+        retain: true
+    resources:
+      requests:
+        cpu: 4
+        memory: 7G
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          exec:
+            command:
+              - mc-health
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20
+      readiness: *probes
+      startup:
+        enabled: false
+    addons:
+      codeserver:
+        enabled: true
+        env: {}
+        args:
+          - --auth
+          - none
+          - --user-data-dir
+          - "/config/.vscode"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        workingDir: ""
+        service:
+          enabled: true
+          type: ClusterIP
+          ports:
+            codeserver:
+              port: 12321
+              enabled: true
+              protocol: TCP
+              targetPort: 12321
+          annotations: {}
+          labels: {}
+        securityContext:
+          runAsUser: 1000

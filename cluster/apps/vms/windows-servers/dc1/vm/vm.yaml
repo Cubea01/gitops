@@ -1,0 +1,68 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachineInstance
+metadata:
+  name: dc1
+  namespace: windows-vms
+  labels:
+    hostname: dc1
+spec:
+  hostname: "dc1"
+  subdomain: "akchristiansen.com"
+  runStrategy: Always
+  terminationGracePeriodSeconds: 200
+  domain:
+    clock:
+      timezone: "America/Anchorage"
+    resources:
+      requests:
+        memory: "4Gi"
+        cpu: "2"
+    devices:
+      interfaces:
+        - name: default
+          passt: {} # connect using passt mode
+          ports: {}
+      disks:
+      - name: windows-server-2019
+        cdrom:
+          readOnly: true
+          bus: sata
+        bootOrder: 2
+      - name: virtio-container-disk
+        cdrom:
+          readOnly: true
+          bus: sata
+      - name: dc1-pvc
+        disk:
+          bus: virtio
+        bootOrder: 1
+      features:
+        smm:
+          enabled: true
+          acpi:
+            enabled: true
+          apic:
+            enabled: true
+          hyperv:
+            relaxed:
+              enabled: true
+            spinlocks:
+              enabled: true
+              spinlocks: 8191
+            vapic:
+              enabled: true
+    firmware:
+      bootloader:
+        efi:
+          secureBoot: true
+  volumes:
+    - name: windows-server-2019
+      persistentVolumeClaim:
+        claimName: windows-server-2019
+        readOnly: true
+    - name: dc1-pvc
+      persistentVolumeClaim:
+        claimName: dc1-pvc
+    - name: virtio-container-disk
+      containerDisk:
+        image: quay.io/kubevirt/virtio-container-disk

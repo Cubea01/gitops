@@ -1,0 +1,63 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: cloudnative-pg
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.9-3
+  postgresGID: 26
+  postgresUID: 26
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 100Gi
+    storageClass: ""
+  superuserSecret:
+    name: cloudnative-pg-secret
+  # bootstrap:
+  #   recovery:
+  #     source: postgres-v4
+  postgresql:
+    parameters:
+      max_connections: "600"
+      shared_buffers: 512MB
+  monitoring:
+    enablePodMonitor: false
+  backup:
+    retentionPolicy: 30d
+    barmanObjectStore:
+      wal:
+        compression: bzip2
+        maxParallel: 8
+      destinationPath: s3://postgresql/
+      endpointURL: https://minio.minio-tenant.svc.cluster.local
+      serverName: postgres-v4
+      endpointCA:
+        name: cloudnative-pg-secret
+        key: ca-bundle
+      s3Credentials:
+        accessKeyId:
+          name: cloudnative-pg-secret
+          key: minio-id
+        secretAccessKey:
+          name: cloudnative-pg-secret
+          key: minio-key
+  # externalClusters:
+  #   - name: postgres-v4
+  #     barmanObjectStore:
+  #       wal:
+  #         compression: bzip2
+  #         maxParallel: 8
+  #       destinationPath: s3://postgresql/
+  #       endpointURL: https://minio.minio-tenant.svc.cluster.local
+  #       endpointCA:
+  #         name: cloudnative-pg-secret
+  #         key: ca-bundle
+  #       s3Credentials:
+  #         accessKeyId:
+  #           name: cloudnative-pg-secret
+  #           key: minio-id
+  #         secretAccessKey:
+  #           name: cloudnative-pg-secret
+  #           key: minio-key

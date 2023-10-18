@@ -1,0 +1,36 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-database-cloudnative-pg
+  namespace: flux-system
+spec:
+  path: ./cluster/apps/database/cloudnative-pg/app
+  dependsOn:
+  - name: cluster-apps-networking-istio-system-istiod
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-database-cloudnative-pg-cluster
+  namespace: flux-system
+spec:
+  path: ./cluster/apps/database/cloudnative-pg/cluster
+  dependsOn:
+  - name: cluster-apps-storage-minio-tenant
+  - name: cluster-apps-database-cloudnative-pg
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m

@@ -1,0 +1,68 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: istiod
+  namespace: istio-system
+  annotations:
+    meta.helm.sh/release-name: istiod
+    meta.helm.sh/release-namespace: istio-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: istiod
+      version: 1.19.0
+      sourceRef:
+        kind: HelmRepository
+        name: istio
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    istio_cni:
+      enabled: true
+    meshConfig:
+      trustDomain: cluster.local
+      defaultConfig:
+        proxyMetadata:
+          ISTIO_META_CERT_SIGNER: istio-issuer
+    global:
+      pilotCertProvider: istiod # Proxy pods need to use istiod, while istiod using cert-manager.
+      certSigners:
+        - clusterissuers.cert-manager.io/istio-issuer
+    pilot:
+      autoscaleEnabled: true
+      autoscaleMin: 2
+      autoscaleMax: 5
+      replicaCount: 2
+      rollingMaxSurge: 100%
+      rollingMaxUnavailable: 25%
+      env:
+        EXTERNAL_CA: ISTIOD_RA_KUBERNETES_API
+        PILOT_ENABLE_ALPHA_GATEWAY_API: "true"
+        CERT_SIGNER_DOMAIN: "clusterissuers.cert-manager.io"
+  valuesFrom:
+    - kind: Secret
+      name: meshconfig-cacertificates-pem
+      valuesKey: pem
+      optional: false
+  postRenderers:
+  - kustomize:
+      patchesStrategicMerge:
+      - kind: Deployment
+        apiVersion: apps/v1
+        metadata:
+          name: istiod
+          namespace: istio-system
+        spec:
+          template:
+            spec:
+              containers:
+              - name: discovery
+                env:
+                  - name: PILOT_CERT_PROVIDER
+                    value: k8s.io/clusterissuers.cert-manager.io/istio-issuer

@@ -1,0 +1,142 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: flux-manifests
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: oci://ghcr.io/fluxcd/flux-manifests
+  ref:
+    tag: v2.0.1
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./
+  prune: true
+  wait: true
+  sourceRef:
+    kind: OCIRepository
+    name: flux-manifests
+  patches:
+    - patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --concurrent=8
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --kube-api-qps=500
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --kube-api-burst=1000
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --requeue-dependency=5s
+      target:
+        kind: Deployment
+        name: (kustomize-controller|helm-controller|source-controller)
+    - patch: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: not-used
+        spec:
+          template:
+            spec:
+              containers:
+                - name: manager
+                  resources:
+                    limits:
+                      cpu: 2000m
+                      memory: 2Gi
+      target:
+        kind: Deployment
+        name: (kustomize-controller|helm-controller|source-controller)
+    - patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --feature-gates=DetectDrift=true,CorrectDrift=false
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --log-level=debug
+      target:
+        kind: Deployment
+        name: helm-controller
+    - patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --feature-gates=OOMWatch=true
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --oom-watch-memory-threshold=95
+        - op: add
+          path: /spec/template/spec/containers/0/args/-
+          value: --oom-watch-interval=500ms
+      target:
+        kind: Deployment
+        name: helm-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-helm-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: helm-controller
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-image-automation-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: image-automation-controller
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-image-reflector-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: image-reflector-controller
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-kustomize-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: kustomize-controller
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-notification-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: notification-controller
+  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-source-controller
+  namespace: flux-system
+spec:
+  selector:
+    app: source-controller
+  clusterIP: None

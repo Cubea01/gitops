@@ -1,0 +1,101 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: bind9-1
+  namespace: bind9
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  values:
+    # securityContext:
+    #   runAsUser: 1000
+    controller:
+      type: deployment
+    image:
+      repository: ubuntu/bind9
+      tag: 9.16-20.04_beta
+    env:
+      TZ: America/Anchorage
+    service:
+      main:
+        enabled: false
+        primary: false
+        ports:
+          http:
+            primary: false
+            enabled: false
+            port: 80
+      lb:
+        enabled: true
+        primary: true
+        type: LoadBalancer
+        annotations:
+          "io.cilium/lb-ipam-ips": "10.0.0.3"
+        ports:
+          http:
+            primary: false
+            enabled: false
+            port: 80
+          tcp:
+            enabled: true
+            port: 53
+            primary: true
+            protocol: TCP
+            targetPort: 53
+          udp:
+            enabled: true
+            port: 53
+            primary: false
+            protocol: UDP
+            targetPort: 53
+    persistence:
+      config:
+        enabled: true
+        type: custom
+        volumeSpec:
+          configMap:
+            name: bind9
+        subPath:
+          - path: named.conf
+            mountPath: /etc/bind/named.conf
+            readOnly: true
+          - path: ak.zone
+            mountPath: /etc/bind/ak.zone
+            readOnly: true
+      cache:
+        enabled: true
+        type: emptyDir
+        mountPath: /var/cache/bind
+      etc-bind:
+        enabled: true
+        type: emptyDir
+        mountPath: /etc/bind
+    serviceAccount:
+      create: true
+    resources:
+      requests:
+        cpu: 500m
+        memory: 600Mi
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          tcpSocket:
+            port: 53
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20
+      readiness: *probes
+      startup:
+        enabled: false

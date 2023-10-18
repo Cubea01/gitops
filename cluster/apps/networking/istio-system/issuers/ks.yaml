@@ -1,0 +1,39 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-networking-istio-system-issuers
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/networking/istio-system/issuers/app
+  dependsOn:
+    - name: cluster-apps-security-cert-manager
+    - name: cluster-apps-security-vault
+    - name: cluster-apps-networking-istio-system-issuers-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: flux-issuer-secrets
+        optional: false
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-networking-istio-system-issuers-secrets
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/networking/istio-system/issuers/secrets
+  dependsOn:
+    - name: cluster-apps-security-external-secrets-stores
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true

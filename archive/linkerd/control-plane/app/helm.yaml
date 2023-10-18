@@ -1,0 +1,165 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: linkerd-control-plane
+  namespace: linkerd
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: linkerd-control-plane
+      version: 1.15.0
+      sourceRef:
+        kind: HelmRepository
+        name: linkerd
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    enablePodDisruptionBudget: true
+    deploymentStrategy:
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 25%
+    enablePodAntiAffinity: true
+    proxy:
+      resources:
+        cpu:
+          request: 100m
+        memory:
+          limit: 250Mi
+          request: 20Mi
+    controllerReplicas: 3
+    controllerResources: &controller_resources
+      cpu: &controller_resources_cpu
+        limit: ""
+        request: 100m
+      memory:
+        limit: 250Mi
+        request: 50Mi
+    destinationResources: *controller_resources
+    identityResources:
+      cpu: *controller_resources_cpu
+      memory:
+        limit: 250Mi
+        request: 10Mi
+    heartbeatResources: *controller_resources
+    proxyInjectorResources: *controller_resources
+    webhookFailurePolicy: Fail
+    spValidatorResources: *controller_resources
+    highAvailability: true
+    cniEnabled: false
+    identityTrustAnchorsPEM: |
+      -----BEGIN CERTIFICATE-----
+      MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
+      BQAwHjEcMBoGA1UEAxMTTGlua2VyZCBtVExTIFJvb3RDQTAeFw0yMzA5MTQwMzE1
+      MzNaFw0yODA5MTIwMzE2MDNaMB4xHDAaBgNVBAMTE0xpbmtlcmQgbVRMUyBSb290
+      Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC/lq/lxItojZKwYEKN
+      v/w13VkkF5AbUVbcfcpXeLvWxshYcU0//9uYxqzRF4sKAvRUn2ieWl4uxBTveCS0
+      fUsYDHynyoCvFcBlZ2YPHduJD9t+TXRkElxqdADVVHwLMXkywCSb3neTWNlfjt4w
+      Qe5QklQeG77Y4eAfVA1Ip3Jlbd0FDyEoSvhIldxBhFqPM6bvH7iRdpre1wGOKYkx
+      0JxZ/3j/+9ww5//BG6gLDd4XgsYIZ9yG2xcFkpYZiUsZg1ed8lbuvlYZmfYE6W0m
+      6QFQNU7/PInhxBTEiEOqbQGkuM9HVhrtRuaLRBv5mQUvYwZQWCF2C0J/1BicksYa
+      dvwDAgMBAAGjgfIwge8wDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
+      HQYDVR0OBBYEFIG1t5nf7mRA6gelufZQw2Iw+GueMB8GA1UdIwQYMBaAFIG1t5nf
+      7mRA6gelufZQw2Iw+GueMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0
+      cDovL3ZhdWx0LmFrY2hyaXN0aWFuc2VuLmNvbTo4MjAwL3YxL3BraS9jYTBABgNV
+      HR8EOTA3MDWgM6Axhi9odHRwOi8vdmF1bHQuYWtjaHJpc3RpYW5zZW4uY29tOjgy
+      MDAvdjEvcGtpL2NybDANBgkqhkiG9w0BAQsFAAOCAQEAEDtWsMKx7QBL3oV2agqx
+      ShIjqP7Ubo2o/cENAGGCZ1zikAvKCHQoiMhLwZMrFYjcKEtOF1JyNM8Zk4R5DIlD
+      OIgNOu0GxxbKxgqtO+Begdd/84XivVTaoNqfhTmur60J9obHrpANZMVmK8+w9dJ4
+      aG9EKcMbyB9D03gCXL3Wui7NnYj5tyU4cHKFhyx/Ni6G9M4rXy3IVkJLYXJzpYFk
+      /PmTiA9XPQij0nvN+uljQtqEu7mVSX5hWE7wbKaHbDtixhjpIRYCFz4NcpN6RCpl
+      alQfGrQW4EjbChe83Ol3w3o60YJbBOLjgoarg6sfJGbqwL7v0c71BzQKOE8DAeyn
+      MA==
+      -----END CERTIFICATE-----
+    identity:
+      issuer:
+        scheme: kubernetes.io/tls
+    policyValidator:
+      externalSecret: true 
+      caBundle: |
+        -----BEGIN CERTIFICATE-----
+        MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
+        BQAwHjEcMBoGA1UEAxMTTGlua2VyZCBtVExTIFJvb3RDQTAeFw0yMzA5MTQwMzE1
+        MzNaFw0yODA5MTIwMzE2MDNaMB4xHDAaBgNVBAMTE0xpbmtlcmQgbVRMUyBSb290
+        Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC/lq/lxItojZKwYEKN
+        v/w13VkkF5AbUVbcfcpXeLvWxshYcU0//9uYxqzRF4sKAvRUn2ieWl4uxBTveCS0
+        fUsYDHynyoCvFcBlZ2YPHduJD9t+TXRkElxqdADVVHwLMXkywCSb3neTWNlfjt4w
+        Qe5QklQeG77Y4eAfVA1Ip3Jlbd0FDyEoSvhIldxBhFqPM6bvH7iRdpre1wGOKYkx
+        0JxZ/3j/+9ww5//BG6gLDd4XgsYIZ9yG2xcFkpYZiUsZg1ed8lbuvlYZmfYE6W0m
+        6QFQNU7/PInhxBTEiEOqbQGkuM9HVhrtRuaLRBv5mQUvYwZQWCF2C0J/1BicksYa
+        dvwDAgMBAAGjgfIwge8wDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
+        HQYDVR0OBBYEFIG1t5nf7mRA6gelufZQw2Iw+GueMB8GA1UdIwQYMBaAFIG1t5nf
+        7mRA6gelufZQw2Iw+GueMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0
+        cDovL3ZhdWx0LmFrY2hyaXN0aWFuc2VuLmNvbTo4MjAwL3YxL3BraS9jYTBABgNV
+        HR8EOTA3MDWgM6Axhi9odHRwOi8vdmF1bHQuYWtjaHJpc3RpYW5zZW4uY29tOjgy
+        MDAvdjEvcGtpL2NybDANBgkqhkiG9w0BAQsFAAOCAQEAEDtWsMKx7QBL3oV2agqx
+        ShIjqP7Ubo2o/cENAGGCZ1zikAvKCHQoiMhLwZMrFYjcKEtOF1JyNM8Zk4R5DIlD
+        OIgNOu0GxxbKxgqtO+Begdd/84XivVTaoNqfhTmur60J9obHrpANZMVmK8+w9dJ4
+        aG9EKcMbyB9D03gCXL3Wui7NnYj5tyU4cHKFhyx/Ni6G9M4rXy3IVkJLYXJzpYFk
+        /PmTiA9XPQij0nvN+uljQtqEu7mVSX5hWE7wbKaHbDtixhjpIRYCFz4NcpN6RCpl
+        alQfGrQW4EjbChe83Ol3w3o60YJbBOLjgoarg6sfJGbqwL7v0c71BzQKOE8DAeyn
+        MA==
+        -----END CERTIFICATE-----
+    proxyInjector:
+      externalSecret: true 
+      caBundle: |
+        -----BEGIN CERTIFICATE-----
+        MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
+        BQAwHjEcMBoGA1UEAxMTTGlua2VyZCBtVExTIFJvb3RDQTAeFw0yMzA5MTQwMzE1
+        MzNaFw0yODA5MTIwMzE2MDNaMB4xHDAaBgNVBAMTE0xpbmtlcmQgbVRMUyBSb290
+        Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC/lq/lxItojZKwYEKN
+        v/w13VkkF5AbUVbcfcpXeLvWxshYcU0//9uYxqzRF4sKAvRUn2ieWl4uxBTveCS0
+        fUsYDHynyoCvFcBlZ2YPHduJD9t+TXRkElxqdADVVHwLMXkywCSb3neTWNlfjt4w
+        Qe5QklQeG77Y4eAfVA1Ip3Jlbd0FDyEoSvhIldxBhFqPM6bvH7iRdpre1wGOKYkx
+        0JxZ/3j/+9ww5//BG6gLDd4XgsYIZ9yG2xcFkpYZiUsZg1ed8lbuvlYZmfYE6W0m
+        6QFQNU7/PInhxBTEiEOqbQGkuM9HVhrtRuaLRBv5mQUvYwZQWCF2C0J/1BicksYa
+        dvwDAgMBAAGjgfIwge8wDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
+        HQYDVR0OBBYEFIG1t5nf7mRA6gelufZQw2Iw+GueMB8GA1UdIwQYMBaAFIG1t5nf
+        7mRA6gelufZQw2Iw+GueMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0
+        cDovL3ZhdWx0LmFrY2hyaXN0aWFuc2VuLmNvbTo4MjAwL3YxL3BraS9jYTBABgNV
+        HR8EOTA3MDWgM6Axhi9odHRwOi8vdmF1bHQuYWtjaHJpc3RpYW5zZW4uY29tOjgy
+        MDAvdjEvcGtpL2NybDANBgkqhkiG9w0BAQsFAAOCAQEAEDtWsMKx7QBL3oV2agqx
+        ShIjqP7Ubo2o/cENAGGCZ1zikAvKCHQoiMhLwZMrFYjcKEtOF1JyNM8Zk4R5DIlD
+        OIgNOu0GxxbKxgqtO+Begdd/84XivVTaoNqfhTmur60J9obHrpANZMVmK8+w9dJ4
+        aG9EKcMbyB9D03gCXL3Wui7NnYj5tyU4cHKFhyx/Ni6G9M4rXy3IVkJLYXJzpYFk
+        /PmTiA9XPQij0nvN+uljQtqEu7mVSX5hWE7wbKaHbDtixhjpIRYCFz4NcpN6RCpl
+        alQfGrQW4EjbChe83Ol3w3o60YJbBOLjgoarg6sfJGbqwL7v0c71BzQKOE8DAeyn
+        MA==
+        -----END CERTIFICATE-----
+    profileValidator:
+      externalSecret: true 
+      caBundle: |
+        -----BEGIN CERTIFICATE-----
+        MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
+        BQAwHjEcMBoGA1UEAxMTTGlua2VyZCBtVExTIFJvb3RDQTAeFw0yMzA5MTQwMzE1
+        MzNaFw0yODA5MTIwMzE2MDNaMB4xHDAaBgNVBAMTE0xpbmtlcmQgbVRMUyBSb290
+        Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC/lq/lxItojZKwYEKN
+        v/w13VkkF5AbUVbcfcpXeLvWxshYcU0//9uYxqzRF4sKAvRUn2ieWl4uxBTveCS0
+        fUsYDHynyoCvFcBlZ2YPHduJD9t+TXRkElxqdADVVHwLMXkywCSb3neTWNlfjt4w
+        Qe5QklQeG77Y4eAfVA1Ip3Jlbd0FDyEoSvhIldxBhFqPM6bvH7iRdpre1wGOKYkx
+        0JxZ/3j/+9ww5//BG6gLDd4XgsYIZ9yG2xcFkpYZiUsZg1ed8lbuvlYZmfYE6W0m
+        6QFQNU7/PInhxBTEiEOqbQGkuM9HVhrtRuaLRBv5mQUvYwZQWCF2C0J/1BicksYa
+        dvwDAgMBAAGjgfIwge8wDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8w
+        HQYDVR0OBBYEFIG1t5nf7mRA6gelufZQw2Iw+GueMB8GA1UdIwQYMBaAFIG1t5nf
+        7mRA6gelufZQw2Iw+GueMEoGCCsGAQUFBwEBBD4wPDA6BggrBgEFBQcwAoYuaHR0
+        cDovL3ZhdWx0LmFrY2hyaXN0aWFuc2VuLmNvbTo4MjAwL3YxL3BraS9jYTBABgNV
+        HR8EOTA3MDWgM6Axhi9odHRwOi8vdmF1bHQuYWtjaHJpc3RpYW5zZW4uY29tOjgy
+        MDAvdjEvcGtpL2NybDANBgkqhkiG9w0BAQsFAAOCAQEAEDtWsMKx7QBL3oV2agqx
+        ShIjqP7Ubo2o/cENAGGCZ1zikAvKCHQoiMhLwZMrFYjcKEtOF1JyNM8Zk4R5DIlD
+        OIgNOu0GxxbKxgqtO+Begdd/84XivVTaoNqfhTmur60J9obHrpANZMVmK8+w9dJ4
+        aG9EKcMbyB9D03gCXL3Wui7NnYj5tyU4cHKFhyx/Ni6G9M4rXy3IVkJLYXJzpYFk
+        /PmTiA9XPQij0nvN+uljQtqEu7mVSX5hWE7wbKaHbDtixhjpIRYCFz4NcpN6RCpl
+        alQfGrQW4EjbChe83Ol3w3o60YJbBOLjgoarg6sfJGbqwL7v0c71BzQKOE8DAeyn
+        MA==
+        -----END CERTIFICATE-----

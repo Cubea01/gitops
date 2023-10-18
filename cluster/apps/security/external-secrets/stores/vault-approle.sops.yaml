@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: vault-approle
+    namespace: external-secrets
+type: Opaque
+stringData:
+    secret-id: ENC[AES256_GCM,data:g/u2nGoVVYOKkSyuERYj7ZeuInoTfKv3AmiKF5tCvhF/DlbI,iv:Kq1FTeBq+iGbxHilsnH90rUSEwU+OBZ99w9gi6hdPCA=,tag:IjtKRSqYaMqg6p48FFsYkw==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault:
+        - vault_address: https://pi-vault.akchristiansen.com:8200
+          engine_path: sops
+          key_name: vault-key
+          created_at: "2023-09-07T22:17:40Z"
+          enc: vault:v1:a2QXLalg8QC9wcLzdfVBvOqS5jxzAom+xypwf0mjNq9mRcqJ3sYEiwgONQkza4pG47CLID2QVGhsv9lG2C6kuJpIvHzNLMyKs2qqzA7uKXxrD8T0W4nJX1Tobqi2sklhOK+HLZBo2gp6QXKLCTI6yrj4Wj0A8rUWxDfzM0yIwbFbFqQrmgw3J/0mPf36kSyXcEQ3Ecc6aI4tOgw1FshF9Guy5KqGGkOrE4UMAhd+uubecio1EXZpdDudGJZJm8F11wp5NBc+0FL9M0LZRD5BSP+qezbl3p3BDulzO1UIhrxxCBFuQXdHAKjRGdIH36sBBF+rS/joyr1h0qwIigYwqWGSiKbBRVmHe2H51rSKDeqwFYo8hz6gU8nnJiXNs/69mRGY25YwBdss8kWSJg6EvECYSux85QWTdpYKcMjS7c9SXkNZU1gx64di6ep1BlsWv31P8vOO4RX4yIPnADIQcOHEA/pEfNy50Z+XBx0st6aJUjVq9z2S6trOftPhnlQ9jTOC/SDEnOH1DIgvGXFlRxg52Tts6E7JUMkKxJouIn/qu4KPWfywcMneF4xJvkUoUMb/3brsj/FRgU1ZLQuItJOANZZJlvBB7AV0nXznSyyN8LkCkHUy3HzipJyAyLGDUBy9vo1XTKzCrSpjx5Ubzd0azzIAJAkpIpiV8kw+5uo=
+    age: []
+    lastmodified: "2023-09-07T22:17:40Z"
+    mac: ENC[AES256_GCM,data:Zcv2Vi4HqIrQvAhEACLgKqDMXpHtbueOwg89rcznj5Mv5C4LYk+RIgZfN4U+pwqERJ5VjjIVfoMKEDryGtSEdn+Gkg8cgfrvRDQRMMMxMYQ19aSN4Kj1TdqpWGIMA7K6epG/oWK6qmVqFY6s8/UVD8JClc/6yYnUBLLbTFnBCU0=,iv:zLyOhkVcrEf+4y12NcrCYpGYH8J12+PKZR2pjP9BVPc=,tag:lBSiWfObdjilqyflQ7eGDg==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3

@@ -1,0 +1,21 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: ca-bundle
+  namespace: flux-system
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: cluster-secrets
+    kind: ClusterSecretStore
+  target:
+    name: ca-bundle
+  data:
+  - secretKey: ca_bundle
+    remoteRef:
+      key: flux-variables
+      property: ca_bundle
+  - secretKey: ca_bundle_base64
+    remoteRef:
+      key: flux-variables
+      property: ca_bundle_base64

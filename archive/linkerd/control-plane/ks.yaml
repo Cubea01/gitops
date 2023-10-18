@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-networking-linkerd-control-plane
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/networking/linkerd/control-plane/app
+  dependsOn:
+    - name: cluster-apps-security-cert-manager
+    - name: cluster-apps-security-vault
+    - name: cluster-apps-networking-linkerd-crds
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: linkerd-control-plane
+      namespace: linkerd

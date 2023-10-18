@@ -1,0 +1,82 @@
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: k8s
+  namespace: minio-tenant
+spec:
+  configuration:
+    name: k8s-env-configuration
+  externalCertSecret:
+    - name: tls-secrets
+      type: kubernetes.io/tls
+  exposeServices: {}
+  features:
+    domains:
+      console: https://minio.akchristiansen.com
+      minio:
+        - https://minio.minio-tenant.svc.cluster.local
+  imagePullPolicy: IfNotPresent
+  kes:
+    clientCertSecret:
+      name: tls-secrets
+      type: kubernetes.io/tls
+    imagePullPolicy: IfNotPresent
+    kesSecret:
+      name: k8s-kes-configuration
+    externalCertSecret:
+      name: tls-secrets
+      type: kubernetes.io/tls
+    keyName: my-minio-key
+    replicas: 2
+    resources: {}
+    securityContext:
+      fsGroup: 1000
+      fsGroupChangePolicy: Always
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+  mountPath: /export
+  podManagementPolicy: Parallel
+  pools:
+    - affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: v1.min.io/tenant
+                    operator: In
+                    values:
+                      - k8s
+                  - key: v1.min.io/pool
+                    operator: In
+                    values:
+                      - pool-0
+              topologyKey: kubernetes.io/hostname
+      name: pool-0
+      resources:
+        requests:
+          cpu: '1'
+          memory: 2Gi
+      runtimeClassName: ''
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      servers: 3
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: '17895697066'
+          storageClassName: nfs-csi
+      volumesPerServer: 2
+  requestAutoCert: false
+  serviceAccountName: k8s-sa
+scheduler:
+  name: ''

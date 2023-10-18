@@ -1,0 +1,33 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: reloader
+  namespace: reloader
+  annotations:
+    meta.helm.sh/release-name: reloader
+    meta.helm.sh/release-namespace: reloader
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: reloader
+      version: 1.0.38
+      sourceRef:
+        kind: HelmRepository
+        name: stakater
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    kubernetes:
+      host: https://k8s.akchristiansen.com
+    reloader:
+      autoReloadAll: true
+      reloadStrategy: default # Set to default, env-vars or annotations
+      ignoreNamespaces: "" # Comma separated list of namespaces to ignore
+      watchGlobally: true
+      enableHA: false

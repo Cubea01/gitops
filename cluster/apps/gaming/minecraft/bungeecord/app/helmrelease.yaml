@@ -1,0 +1,134 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: bungeecord
+  namespace: minecraft
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    securityContext:
+      runAsUser: 1000
+    initContainers:
+      chown-sidecar:
+        image: busybox:latest
+        command: ["sh", "-c", "chown -R 1000:1000 /server"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: data
+            mountPath: /server
+        securityContext:
+          runAsUser: 0
+    controller:
+      type: deployment
+    image:
+      repository: itzg/bungeecord
+      tag: latest
+    env:
+      UID: 1000
+      TZ: America/Anchorage
+      BUNGEE_JAR_FILE: "/server/server.jar"
+      TYPE: CUSTOM
+      MEMORY: 512M
+    service:
+      main:
+        enabled: false
+        primary: false
+        ports:
+          http:
+            port: 0
+            enabled: false
+      lb:
+        enabled: true
+        primary: true
+        type: LoadBalancer
+        annotations:
+          "io.cilium/lb-ipam-ips": "10.0.0.7"
+        ports:
+          http:
+            enabled: false
+            port: 80
+            primary: false
+          mc-br-lb:
+            enabled: true
+            port: 19132
+            primary: false
+            protocol: UDP
+            targetPort: 19132
+          mc-lb:
+            enabled: true
+            port: 25565
+            primary: true
+            protocol: TCP
+            targetPort: 25577
+    persistence:
+      data:
+        enabled: true
+        type: pvc
+        accessMode: ReadWriteOnce
+        size: 100Gi
+        mountPath: /server
+        storageClass: iscsi-csi
+        retain: true
+    resources:
+      requests:
+        cpu: 600m
+        memory: 600Mi
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          tcpSocket:
+            port: 25577
+          initialDelaySeconds: 60
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20
+      readiness: *probes
+      startup:
+        enabled: false
+    addons:
+      codeserver:
+        enabled: true
+        env: {}
+        args:
+          - --auth
+          - none
+          - --user-data-dir
+          - "/config/.vscode"
+        volumeMounts:
+        - name: data
+          mountPath: /server
+        workingDir: ""
+        service:
+          enabled: true
+          type: ClusterIP
+          ports:
+            codeserver:
+              port: 12321
+              enabled: true
+              protocol: TCP
+              targetPort: 12321
+          annotations: {}
+          labels: {}
+        securityContext:
+          runAsUser: 1000

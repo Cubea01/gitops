@@ -1,0 +1,106 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: ark
+  namespace: ark
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: ark-cluster
+      version: 0.1.14
+      sourceRef:
+        kind: HelmRepository
+        name: ark
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    hostPort: false
+    replicaCount: 0
+    rcon:
+      password:
+    resources:
+      limits:
+        cpu: 2
+        memory: 8Gi
+      requests:
+        cpu: 1
+        memory: 6Gi
+    containerPorts:
+      gameudp: 7777
+      queryudp: 27015
+      rcon: 32330
+    persistence:
+      enabled: true
+      game:
+        accessModes:
+          - ReadWriteMany
+        size: 100Gi
+      cluster:
+        accessModes:
+          - ReadWriteMany
+        size: 100Gi
+        mountPath: /arkserver/ShooterGame/Saved/clusters
+      save:
+        accessModes:
+          - ReadWriteOnce
+        size: 100Gi
+        mountPath: /arkserver/ShooterGame/Saved
+    servers:
+      theisland:
+        updateOnStart: true
+        sessionName: "Gage And Emmets Server"
+        message: "Welcome to the Island"
+        map: TheIsland
+        password: ""
+        maxPlayers: 10
+        xpMultiplier: 6
+        extraEnvVars:
+          - name: am_arkwarnminutes
+            value: "30"
+        ports:
+          queryudp: 27015
+          gameudp: 7777
+          rcon: 32330
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+          limits:
+            cpu: 1.5
+            memory: 6Gi
+        customConfigMap:
+          GameIni: |
+            [/Script/ShooterGame.ShooterGameMode]
+            bDisableStructurePlacementCollision=True
+            PerLevelStatsMultiplier_Player[0]=2.0
+            PerLevelStatsMultiplier_Player[4]=2.0
+            PerLevelStatsMultiplier_Player[5]=2.0
+            PerLevelStatsMultiplier_Player[7]=2.0
+            PerLevelStatsMultiplier_DinoTamed[7]=2.0
+            PerLevelStatsMultiplier_DinoWild[7]=1
+            MatingIntervalMultiplier=0.1
+            BabyMatureSpeedMultiplier=25.0
+            EggHatchSpeedMultiplier=15.0
+            BabyCuddleIntervalMultiplier=0.1
+          GameUserSettingsIni: |
+            [/Script/ShooterGame.ShooterGameUserSettings]
+            Version=5
+            [ServerSettings]
+            AllowFlyerCarryPvE=True
+            AllowThirdPersonPlayer=True
+            AllowSharedConnections=True
+            AlwaysNotifyPlayerLeft=False
+            AutoSavePeriodMinutes=15.000000
+            ClampResourceHarvestDamage=False
+            XPMultiplier=6

@@ -1,0 +1,24 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "from-world-to-unifi-gateway"
+  namespace: unifi-controller
+spec:
+  endpointSelector:
+    matchLabels:
+      istio.io/gateway-name: unifi-gateway
+  ingress:
+    - fromEntities:
+      - world
+      toPorts:
+      - ports:
+        - port: "443"
+          protocol: TCP
+        - port: "80"
+          protocol: TCP
+        - port: "8843"
+          protocol: TCP
+        - port: "8880"
+          protocol: TCP
+        - port: "8080"
+          protocol: TCP

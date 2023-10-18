@@ -1,0 +1,24 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-networking-ingress-nginx
+  namespace: flux-system
+spec:
+  path: ./cluster/apps/networking/ingress-nginx/app
+  prune: true
+  dependsOn:
+    - name: cluster-apps-networking-linkerd-control-plane
+    - name: cluster-apps-security-cert-manager
+    - name: cluster-apps-security-external-secrets
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: false
+  interval: 30m
+  retryInterval: 1m
+  timeout: 5m
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: ingress-nginx
+      namespace: linkerd

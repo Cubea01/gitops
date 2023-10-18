@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: flux-variables
+  namespace: flux-system
+spec:
+  path: ./cluster/flux/variables/external-secrets
+  prune: true
+  dependsOn:
+  - name: cluster-apps-security-external-secrets-stores
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m

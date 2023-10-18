@@ -1,0 +1,17 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: default
+  namespace: velero
+spec:
+  schedule: 0 0 * * *
+  template:
+    includedNamespaces:
+    - '*'
+    excludedNamespaces:
+    - cloudnative-pg
+    - kube-system
+    - kube-public
+    - velero
+    - minio
+    - minio-tenant

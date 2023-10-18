@@ -1,0 +1,147 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: unifi-controller
+  namespace: unifi-controller
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.3.2
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controller:
+      type: deployment
+    image:
+      repository: lscr.io/linuxserver/unifi-network-application
+      tag: 7.5.174
+    initContainers:
+      unifi-ssl:
+        image: lscr.io/linuxserver/unifi-network-application:7.5.174
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c", "mkdir -p /config/data /config/logs && rm -f /config/data/keystore && keytool -import -alias ca -file /usr/lib/unifi/tls/ca.crt -keystore /config/data/keystore -storepass aircontrolenterprise -noprompt && openssl pkcs12 -export -in /usr/lib/unifi/tls/tls.crt -inkey /usr/lib/unifi/tls/tls.key -out /tmp/unifi.p12 -name unifi -passout pass:aircontrolenterprise && keytool -importkeystore -srckeystore /tmp/unifi.p12 -srcstoretype PKCS12 -srcstorepass aircontrolenterprise -destkeystore /config/data/keystore -deststorepass aircontrolenterprise -noprompt && rm /tmp/unifi.p12"]
+        volumeMounts:
+        - name: unifi
+          mountPath: /config
+        - name: tls-secrets
+          readOnly: true
+          mountPath: /usr/lib/unifi/tls/tls.crt
+          subPath: tls.crt
+        - name: tls-secrets
+          readOnly: true
+          mountPath: /usr/lib/unifi/tls/tls.key
+          subPath: tls.key
+        - name: tls-secrets
+          readOnly: true
+          mountPath: /usr/lib/unifi/tls/ca.crt
+          subPath: ca.crt
+    sidecars:
+      mongodb:
+        image: mongo:4.4.24
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 1000
+        volumeMounts:
+        - name: mongodb
+          mountPath: /data/db
+        - name: mongodb-init
+          mountPath: /docker-entrypoint-initdb.d/mongo-init-script.js
+          subPath: MONGO_INIT_SCRIPT
+        ports:
+        - name: mongodb
+          containerPort: 27017
+    env:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Anchorage
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DBNAME: unifi
+      MEM_LIMIT: 1024
+      MEM_STARTUP: 1024
+    envFrom:
+    - secretRef:
+        name: unifi-secrets
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            enabled: false
+            port: 0
+          https-admin:
+            enabled: true
+            port: 8443
+            protocol: TCP
+          http-guest:
+            enabled: true
+            port: 8880
+            protocol: TCP
+          https-guest:
+            enabled: true
+            port: 8843
+            protocol: TCP
+          com:
+            enabled: true
+            port: 8080
+            protocol: TCP
+    persistence:
+      unifi:
+        enabled: true
+        existingClaim: unifi-controller-unifi
+        mountPath: /config
+      mongodb:
+        enabled: true
+        existingClaim: unifi-controller-mongodb
+        mountPath: "-"
+      mongodb-init:
+        enabled: true
+        type: secret
+        name: mongo-init-script
+      tls-secrets:
+        enabled: true
+        type: custom
+        volumeSpec:
+          secret:
+            secretName: tls-secrets
+        subPath:
+          - path: tls.crt
+            mountPath: /usr/lib/unifi/tls/tls.crt
+          - path: tls.key
+            mountPath: /usr/lib/unifi/tls/tls.key
+          - path: ca.crt
+            mountPath: /usr/lib/unifi/tls/ca.crt
+            readOnly: true
+    resources:
+      requests:
+        cpu: 1
+        memory: 1500Mi
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          tcpSocket:
+            port: 8443
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 20
+      readiness: *probes
+      startup:
+        enabled: false

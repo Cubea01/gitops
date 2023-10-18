@@ -1,0 +1,128 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: unifi-gateway
+  namespace: unifi-controller
+  annotations:
+    io.cilium/lb-ipam-ips: 10.0.0.5
+    external-dns.alpha.kubernetes.io/hostname: unifi.akchristiansen.com
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: https-admin
+    hostname: unifi.akchristiansen.com
+    port: 443
+    protocol: TLS
+    tls:
+      mode: Passthrough
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: http-admin
+    hostname: unifi.akchristiansen.com
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: https-guest
+    hostname: unifi.akchristiansen.com
+    port: 8843
+    protocol: TLS
+    tls:
+      mode: Passthrough
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: http-guest
+    port: 8880
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: unifi-comm
+    port: 8080
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: https-admin
+  namespace: unifi-controller
+spec:
+  parentRefs:
+  - name: unifi-gateway
+    sectionName: https-admin
+  rules:
+  - backendRefs:
+    - name: unifi-controller
+      port: 8443
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: http-filter-redirect
+  namespace: unifi-controller
+spec:
+  parentRefs:
+  - name: unifi-gateway
+    sectionName: http-admin
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: https-guest
+  namespace: unifi-controller
+spec:
+  parentRefs:
+  - name: unifi-gateway
+    sectionName: https-guest
+  rules:
+  - backendRefs:
+    - name: unifi-controller
+      port: 8843
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: http-guest
+  namespace: unifi-controller
+spec:
+  parentRefs:
+  - name: unifi-gateway
+    sectionName: http-guest
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: unifi-controller
+      port: 8880
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: unifi-comm
+  namespace: unifi-controller
+spec:
+  parentRefs:
+  - name: unifi-gateway
+    sectionName: unifi-comm
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: unifi-controller
+      port: 8080

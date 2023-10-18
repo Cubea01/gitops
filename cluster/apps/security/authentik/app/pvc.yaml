@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-authentik-postgresql-0
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - noatime
+    - vers=4.1
+  nfs:
+    path: /mnt/primary-pool/K8s/nfs/data-authentik-postgresql-0
+    server: 10.0.3.2
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-authentik-postgresql-0
+  namespace: authentik
+spec:
+  storageClassName: ""
+  volumeName: data-authentik-postgresql-0
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-data-authentik-redis-master-0
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - noatime
+    - vers=4.1
+  nfs:
+    path: /mnt/primary-pool/K8s/nfs/redis-data-authentik-redis-master-0
+    server: 10.0.3.2
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-authentik-redis-master-0
+  namespace: authentik
+spec:
+  storageClassName: ""
+  volumeName: redis-data-authentik-redis-master-0
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

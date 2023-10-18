@@ -1,0 +1,59 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: console-gateway
+  namespace: minio-tenant
+  annotations:
+    io.cilium/lb-ipam-ips: 10.0.0.8
+    external-dns.alpha.kubernetes.io/hostname: minio.akchristiansen.com
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: console-https
+    hostname: minio.akchristiansen.com
+    port: 443
+    protocol: TLS
+    tls:
+      mode: Passthrough
+    allowedRoutes:
+      namespaces:
+        from: Same
+  - name: console-http
+    hostname: minio.akchristiansen.com
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: console-https
+  namespace: minio-tenant
+spec:
+  parentRefs:
+  - name: console-gateway
+    sectionName: console-https
+  hostnames: ["minio.akchristiansen.com"]
+  rules:
+  - backendRefs:
+    - name: k8s-console
+      port: 9443
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: console-http-filter-redirect
+  namespace: minio-tenant
+spec:
+  parentRefs:
+  - name: console-gateway
+    sectionName: console-http
+  hostnames: ["minio.akchristiansen.com"]
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301

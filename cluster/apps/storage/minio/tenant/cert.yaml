@@ -1,0 +1,32 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: minio-cert
+  namespace: minio-tenant
+spec:
+  secretName: tls-secrets
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  commonName: minio.akchristiansen.com
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  usages:
+    - server auth
+    - client auth
+  dnsNames:
+    - minio.akchristiansen.com
+    - minio-api.akchristiansen.com
+    - minio.minio-tenant.svc.cluster.local
+    - k8s-hl.minio-tenant.svc.cluster.local
+    - k8s-pool-0-0.k8s-hl.minio-tenant.svc.cluster.local
+    - k8s-pool-0-1.k8s-hl.minio-tenant.svc.cluster.local
+    - k8s-pool-0-2.k8s-hl.minio-tenant.svc.cluster.local
+    - k8s-kes-hl-svc.minio-tenant.svc.cluster.local
+    - k8s-kes-0.k8s-kes-hl-svc.minio-tenant.svc.cluster.local
+    - k8s-kes-1.k8s-kes-hl-svc.minio-tenant.svc.cluster.local
+  issuerRef:
+    name: ingress-issuer
+    kind: ClusterIssuer

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind9
+  namespace: bind9
+data:
+  named.conf: |
+    options {
+      directory "/var/cache/bind"; // Specify the directory for BIND to store its data
+      allow-query { any; }; // Allow queries from any IP address
+      recursion yes; // Disable recursive queries (authoritative-only server)
+      dnssec-validation no; // Disable DNSSEC validation (for simplicity)
+      auth-nxdomain yes; // Authoritative server responds with "NXDOMAIN" for non-existent domains
+    };
+    key "externaldns-key" {
+      algorithm hmac-sha256;
+      secret "NZ2bUZnzrAM6bGbiXIWX9MiJXfBTFX1LvmoQQen0cFg=";
+    };
+    zone "cluster.local" {
+        type forward;
+        forward only;
+        forwarders { 10.96.0.10; };
+    };
+    zone "akchristiansen.com" {
+      type master;
+      file "/etc/bind/ak.zone";
+      allow-transfer {
+          key "externaldns-key";
+      };
+      update-policy {
+          grant externaldns-key zonesub ANY;
+      };
+    };
+  ak.zone: |
+    $TTL 60 ; 1 minute
+    @       IN SOA  ns.akchristiansen.com. root.akchristiansen.com. (
+                                    16         ; serial
+                                    60         ; refresh (1 minute)
+                                    60         ; retry (1 minute)
+                                    60         ; expire (1 minute)
+                                    60         ; minimum (1 minute)
+                                    )
+            NS      ns.akchristiansen.com.
+    ns      A       10.0.0.2
+    node1    A   10.0.3.4
+    node2    A   10.0.3.5
+    node3    A   10.0.3.6

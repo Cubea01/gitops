@@ -1,0 +1,40 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-security-external-secrets
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/security/external-secrets/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: external-secrets
+      namespace: external-secrets
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-security-external-secrets-stores
+  namespace: flux-system
+spec:
+  interval: 10m
+  dependsOn:
+    - name: cluster-apps-security-external-secrets
+    - name: cluster-apps-security-vault
+  path: ./cluster/apps/security/external-secrets/stores
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-vault-key
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true

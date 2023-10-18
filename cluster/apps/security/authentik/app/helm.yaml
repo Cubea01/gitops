@@ -1,0 +1,54 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: authentik
+      version: 2023.8.2
+      sourceRef:
+        kind: HelmRepository
+        name: authentik
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    autoscaling:
+      server:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 50
+      worker:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 5
+        targetCPUUtilizationPercentage: 80
+    authentik:
+      secret_key: ${secret_key}
+      email:
+        host: ${email_host}
+        port: 25
+        from: ${from_email}
+      postgresql:
+        password: ${postgresql_key}
+    geoip:
+      enabled: true
+      accountId: ${geoip_accountid}
+      licenseKey: ${geoip_licensekey}
+      editionIds: "GeoLite2-City"
+    postgresql:
+      enabled: true
+      postgresqlPassword: ${postgresql_key}
+      persistence:
+        enabled: true
+        storageClass: nfs-csi
+        accessModes:
+          - ReadWriteOnce
+    redis:
+      enabled: true

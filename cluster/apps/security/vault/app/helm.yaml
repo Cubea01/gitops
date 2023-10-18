@@ -1,0 +1,214 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: vault
+  namespace: vault
+  annotations:
+    meta.helm.sh/release-name: vault
+    meta.helm.sh/release-namespace: vault
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: vault
+      version: 0.25.0
+      sourceRef:
+        kind: HelmRepository
+        name: hashicorp
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    global:
+      enabled: false
+      tlsDisable: false
+      psp:
+        enable: false
+    injector:
+      enabled: "false"
+    server:
+      enabled: "true"
+      updateStrategyType: "OnDelete"
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          memory: 8Gi
+          cpu: 2000m
+        limits:
+          memory: 16Gi
+          cpu: 2000m
+      readinessProbe:
+        enabled: true
+        path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+      livenessProbe:
+        enabled: true
+        path: "/v1/sys/health?standbyok=true"
+        initialDelaySeconds: 30
+      extraSecretEnvironmentVars:
+        - envName: VAULT_TOKEN
+          secretName: unseal-token
+          secretKey: unseal-token
+      extraVolumes:
+        - type: secret
+          name: tls-secrets
+      authDelegator:
+        enabled: true
+      service:
+        enabled: true
+        active:
+          enabled: true
+        standby:
+          enabled: false
+        instanceSelector:
+          enabled: false
+      dataStorage:
+        enabled: true
+        size: 10Gi
+        mountPath: "/vault/data"
+        storageClass: nfs-csi
+        accessMode: ReadWriteOnce
+        annotations: {}
+      auditStorage:
+        enabled: false
+        size: 10Gi
+      standalone:
+        enabled: "false"
+      ha:
+        enabled: true
+        replicas: 3
+        apiAddr: https://vault.akchristiansen.com:8200
+        clusterAddr: https://$(HOSTNAME).vault-internal.vault.svc.cluster.local:8201
+        raft:
+          enabled: true
+          setNodeId: true
+          config: |
+            ui = true
+            listener "tcp" {
+              address = "[::]:8200"
+              cluster_address = "[::]:8201"
+              tls_cert_file = "/vault/userconfig/tls-secrets/tls.crt"
+              tls_key_file = "/vault/userconfig/tls-secrets/tls.key"
+              tls_client_ca_file = "/vault/userconfig/tls-secrets/ca.crt"
+            }
+
+            storage "raft" {
+              path = "/vault/data"
+              retry_join {
+                leader_api_addr = "https://vault-0.vault-internal.vault.svc.cluster.local:8200"
+                leader_ca_cert_file = "/vault/userconfig/tls-secrets/ca.crt"
+                leader_client_cert_file = "/vault/userconfig/tls-secrets/tls.crt"
+                leader_client_key_file = "/vault/userconfig/tls-secrets/tls.key"
+              }
+              retry_join {
+                leader_api_addr = "https://vault-1.vault-internal.vault.svc.cluster.local:8200"
+                leader_ca_cert_file = "/vault/userconfig/tls-secrets/ca.crt"
+                leader_client_cert_file = "/vault/userconfig/tls-secrets/tls.crt"
+                leader_client_key_file = "/vault/userconfig/tls-secrets/tls.key"
+              }
+              retry_join {
+                leader_api_addr = "https://vault-2.vault-internal.vault.svc.cluster.local:8200"
+                leader_ca_cert_file = "/vault/userconfig/tls-secrets/ca.crt"
+                leader_client_cert_file = "/vault/userconfig/tls-secrets/tls.crt"
+                leader_client_key_file = "/vault/userconfig/tls-secrets/tls.key"
+              }
+            }
+
+            seal "transit" {
+              address = "https://pi-vault.akchristiansen.com:8200"
+              disable_renewal = "false"
+              key_name = "autounseal"
+              mount_path = "transit/"
+              tls_skip_verify = "false"
+            }
+
+            service_registration "kubernetes" {}
+        disruptionBudget:
+          enabled: true
+    ui:
+      enabled: false
+    csi:
+      enabled: false
+      daemonSet:
+        updateStrategy:
+          type: RollingUpdate
+        providersDir: "/etc/kubernetes/secrets-store-csi-providers"
+        kubeletRootDir: "/var/lib/kubelet"
+    serverTelemetry:
+      # Enable support for the Prometheus Operator. Currently, this chart does not support
+      # authenticating to Vault's metrics endpoint, so the following `telemetry{}` must be included
+      # in the `listener "tcp"{}` stanza
+      #  telemetry {
+      #    unauthenticated_metrics_access = "true"
+      #  }
+      #
+      # See the `standalone.config` for a more complete example of this.
+      #
+      # In addition, a top level `telemetry{}` stanza must also be included in the Vault configuration:
+      #
+      # example:
+      #  telemetry {
+      #    prometheus_retention_time = "30s"
+      #    disable_hostname = true
+      #  }
+      #
+      # Configuration for monitoring the Vault server.
+      serviceMonitor:
+        # The Prometheus operator *must* be installed before enabling this feature,
+        # if not the chart will fail to install due to missing CustomResourceDefinitions
+        # provided by the operator.
+        #
+        # Instructions on how to install the Helm chart can be found here:
+        #  https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+        # More information can be found here:
+        #  https://github.com/prometheus-operator/prometheus-operator
+        #  https://github.com/prometheus-operator/kube-prometheus
+
+        # Enable deployment of the Vault Server ServiceMonitor CustomResource.
+        enabled: false
+
+        # Selector labels to add to the ServiceMonitor.
+        # When empty, defaults to:
+        #  release: prometheus
+        selectors: {}
+
+        # Interval at which Prometheus scrapes metrics
+        interval: 30s
+
+        # Timeout for Prometheus scrapes
+        scrapeTimeout: 10s
+
+      prometheusRules:
+          # The Prometheus operator *must* be installed before enabling this feature,
+          # if not the chart will fail to install due to missing CustomResourceDefinitions
+          # provided by the operator.
+
+          # Deploy the PrometheusRule custom resource for AlertManager based alerts.
+          # Requires that AlertManager is properly deployed.
+          enabled: false
+
+          # Selector labels to add to the PrometheusRules.
+          # When empty, defaults to:
+          #  release: prometheus
+          selectors: {}
+
+          # Some example rules.
+          rules: []
+          #  - alert: vault-HighResponseTime
+          #    annotations:
+          #      message: The response time of Vault is over 500ms on average over the last 5 minutes.
+          #    expr: vault_core_handle_request{quantile="0.5", namespace="mynamespace"} > 500
+          #    for: 5m
+          #    labels:
+          #      severity: warning
+          #  - alert: vault-HighResponseTime
+          #    annotations:
+          #      message: The response time of Vault is over 1s on average over the last 5 minutes.
+          #    expr: vault_core_handle_request{quantile="0.5", namespace="mynamespace"} > 1000
+          #    for: 5m
+          #    labels:
+          #      severity: critical

@@ -1,0 +1,50 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: velero
+  namespace: velero
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: velero
+      version: 5.0.2
+      sourceRef:
+        kind: HelmRepository
+        name: vmware-tanzu
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    snapshotsEnabled: false
+    deployNodeAgent: true
+    nodeAgent:
+      podVolumePath: /var/lib/kubelet/pods
+      privileged: true
+    credentials:
+      useSecret: true
+      existingSecret: velero-secrets
+    initContainers:
+      - name: velero-plugin-for-aws
+        image: velero/velero-plugin-for-aws:v1.8.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
+    configuration:
+      backupStorageLocation:
+      - name: default
+        provider: aws
+        bucket: velero
+        caCert: ${ca_bundle_base64}
+        config:
+          region: minio
+          s3ForcePathStyle: true
+          s3Url: https://minio-api.akchristiansen.com
+          insecureSkipTLSVerify: false
+      uploaderType: restic
+      defaultBackupStorageLocation: default
+      namespace: velero
+      defaultVolumesToFsBackup: true

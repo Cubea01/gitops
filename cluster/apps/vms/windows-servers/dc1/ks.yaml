@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-vms-windows-server-dc1
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cluster-apps-vms-kubevirt
+  path: ./cluster/apps/vms/windows-servers/dc1/vm
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  interval: 30m
+  retryInterval: 1m
+  timeout: 10m

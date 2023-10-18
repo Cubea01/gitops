@@ -1,0 +1,42 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-storage-velero
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/storage/velero/app
+  dependsOn:
+    - name: flux-variables
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: ca-bundle
+        optional: false
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: velero
+      namespace: velero
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-storage-velero-backups
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/storage/velero/backups
+  dependsOn:
+    - name: cluster-apps-storage-velero
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-git-repo
+  wait: true
