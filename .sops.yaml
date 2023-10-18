@@ -1,0 +1,9 @@
+creation_rules:
+  - path_regex: cluster/apps/security/vault/app.*\.sops\.ya?ml
+    encrypted_regex: "^(data|stringData)$"
+    hc_vault_transit_uri: https://pi-vault.akchristiansen.com:8200/v1/sops/keys/vault-key
+  - path_regex: cluster/apps/security/external-secrets/stores.*\.sops\.ya?ml
+    encrypted_regex: "^(data|stringData)$"
+    hc_vault_transit_uri: https://pi-vault.akchristiansen.com:8200/v1/sops/keys/vault-key
+  - path_regex: bootstrap/.*\.sops\.ya?ml
+    pgp: 4C444E07DE2761BC948F8EB7A2C40CE4E814C29D

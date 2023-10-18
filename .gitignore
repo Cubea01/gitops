@@ -1,0 +1,13 @@
+.sopsrc
+age.agekey
+.DS_Store
+Thumbs.db
+.private/
+*.code-workspace
+.decrypted~*
+*.agekey
+*.pub
+*.key
+*.pem
+kubeconfig*
+clusterconfig/
