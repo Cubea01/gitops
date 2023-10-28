@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  url: ssh://git@github.com:Cubea01/gitops.git
+  url: ssh://git@github.com/Cubea01/gitops.git
   ref:
     branch: main
   secretRef:
