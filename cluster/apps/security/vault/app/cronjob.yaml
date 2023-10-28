@@ -37,9 +37,7 @@ spec:
             args:
             - -ec
             - |
-              apk add --no-cache curl
-              curl -sS https://webinstall.dev/jq | sh
-              export VAULT_TOKEN=$(vault write auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID -format=json | /jq/jq -r .auth.client_token);
+              export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID);
               vault operator raft snapshot save /share/vault-raft.snap; 
             envFrom:
             - secretRef:
