@@ -58,6 +58,7 @@ spec:
             args:
             - -ec
             - |
+              cat /etc/ssl/certs/ca.crt >> /etc/ssl/certs/ca-certificates.crt
               until [ -f /share/vault-raft.snap ]; do sleep 5; done;
               aws --endpoint-url $AWS_ENDPOINT_URL s3 cp /share/vault-raft.snap s3://vault-backups/vault_raft_$(date +"%Y%m%d_%H%M%S").snap;
             envFrom:
