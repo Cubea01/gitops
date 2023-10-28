@@ -5,7 +5,7 @@ metadata:
   namespace: vault
 spec:
   selector:
-    app: dns-vault-snapshot-agent
+    app: vault-snapshot-agent
   clusterIP: None
 ---
 apiVersion: batch/v1
