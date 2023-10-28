@@ -10,4 +10,4 @@ spec:
   wait: false
   sourceRef:
     kind: GitRepository
-    name: flux-git-repo
+    name: github

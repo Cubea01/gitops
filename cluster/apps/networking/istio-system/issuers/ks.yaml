@@ -14,7 +14,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-git-repo
+    name: github
   wait: true
   postBuild:
     substituteFrom:
@@ -35,5 +35,5 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: flux-git-repo
+    name: github
   wait: true

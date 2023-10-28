@@ -12,7 +12,7 @@ spec:
     - name: cluster-apps-security-external-secrets
   sourceRef:
     kind: GitRepository
-    name: flux-git-repo
+    name: github
   wait: false
   interval: 30m
   retryInterval: 1m

@@ -2,15 +2,15 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: flux-git-repo
+  name: github
   namespace: flux-system
 spec:
   interval: 30m
-  url: ssh://git@nas-1.akchristiansen.com:2222/gage/temp.git
+  url: ssh://git@github.com:Cubea01/gitops.git
   ref:
     branch: main
   secretRef:
-    name: flux-git-repo
+    name: github
   ignore: |
     # exclude all
     /*
@@ -29,4 +29,4 @@ spec:
   wait: false
   sourceRef:
     kind: GitRepository
-    name: flux-git-repo
+    name: github
