@@ -19,7 +19,7 @@ spec:
       kind: HelmRelease
       name: k10
       namespace: kasten-io
-  interval: 30m
+  interval: 5m
   retryInterval: 10m
   timeout: 20m
   postBuild:
@@ -42,6 +42,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: github
-  interval: 30m
+  interval: 5m
   retryInterval: 10m
   timeout: 20m
