@@ -1,0 +1,22 @@
+apiVersion: config.kio.kasten.io/v1alpha1
+kind: Profile
+metadata:
+  name: s3-storage
+  namespace: kasten-io
+spec:
+  locationSpec:
+    credential:
+      secret:
+        apiVersion: v1
+        kind: secret
+        name: k10-s3-secret
+        namespace: kasten-io
+      secretType: AwsAccessKey
+    objectStore:
+      endpoint: https://nas-1.akchristiansen.com:9000
+      name: kasten-io
+      objectStoreType: S3
+      path: k10/9185e57e-53cd-4960-8140-4dfc2e876106/migration
+      pathType: Directory
+    type: ObjectStore
+  type: Location
