@@ -48,3 +48,10 @@ spec:
         enabled: false
     grafana:
       enabled: false
+    injectKanisterSidecar:
+      enabled: true
+      namespaceSelector:
+        matchLabels:
+          - injectKanisterSidecar: true
+      webhookServer:
+        port: 9784
