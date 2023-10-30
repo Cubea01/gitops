@@ -8,3 +8,4 @@ spec:
     app: k10
     app-name: kasten-io
   clusterIP: None
+  publishNotReadyAddresses: true
