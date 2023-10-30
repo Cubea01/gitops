@@ -6,6 +6,16 @@ metadata:
 spec:
   selector:
     app: k10
+  clusterIP: None
+  publishNotReadyAddresses: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-k10-tools
+  namespace: kasten-io
+spec:
+  selector:
     app-name: kasten-io
   clusterIP: None
   publishNotReadyAddresses: true
