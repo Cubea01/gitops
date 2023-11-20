@@ -14,7 +14,7 @@ spec:
     - vers=4.1
   nfs:
     path: /mnt/primary-pool/K8s/nfs/postgres-1
-    server: 10.0.3.2
+    server: 10.0.6.2
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -32,7 +32,7 @@ spec:
     - vers=4.1
   nfs:
     path: /mnt/primary-pool/K8s/nfs/postgres-2
-    server: 10.0.3.2
+    server: 10.0.6.2
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -50,4 +50,4 @@ spec:
     - vers=4.1
   nfs:
     path: /mnt/primary-pool/K8s/nfs/postgres-3
-    server: 10.0.3.2
+    server: 10.0.6.2

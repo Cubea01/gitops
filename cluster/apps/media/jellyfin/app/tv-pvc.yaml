@@ -14,7 +14,7 @@ spec:
     - vers=4.1
   nfs:
     path: /mnt/qsan-storage/media-data
-    server: 10.0.3.2
+    server: 10.0.6.2
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

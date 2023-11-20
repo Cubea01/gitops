@@ -79,7 +79,7 @@ spec:
           zvolEnableReservation: false
           zvolBlocksize: 16K
         iscsi:
-          targetPortal: "10.0.3.2:3260"
+          targetPortal: "10.0.6.2:3260"
           targetPortals: []
           interface:
           nameTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"

@@ -63,7 +63,7 @@ spec:
           datasetPermissionsGroup: 0
         nfs:
           #shareCommentTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
-          shareHost: 10.0.3.2
+          shareHost: 10.0.6.2
           shareAlldirs: false
           shareAllowedNetworks:
           - 10.0.3.0/24
