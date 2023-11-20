@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dns-iscsi-csi
-  namespace: kube-system
+  name: csi-dns
+  namespace: csi
 spec:
   selector:
     app.kubernetes.io/component: controller-linux

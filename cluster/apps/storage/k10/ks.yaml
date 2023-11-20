@@ -9,8 +9,8 @@ spec:
   prune: true
   dependsOn:
   - name: cluster-apps-security-external-secrets-stores
-  - name: cluster-apps-storage-iscsi-csi
-  - name: cluster-apps-storage-nfs-csi
+  - name: cluster-apps-storage-csi-iscsi
+  - name: cluster-apps-storage-csi-nfs
   - name: flux-variables
   sourceRef:
     kind: GitRepository

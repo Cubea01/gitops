@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./csi
-  - ./k10/ks.yaml
+  - ./dns.yaml
+  - ./namespace.yaml
+  - ./ks.yaml

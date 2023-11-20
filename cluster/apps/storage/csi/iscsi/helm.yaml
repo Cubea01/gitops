@@ -1,0 +1,57 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: iscsi-csi
+  namespace: csi
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: democratic-csi
+      version: 0.14.1
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi
+        namespace: flux-system
+      interval: 5m
+  install:
+    createNamespace: true
+  values:
+    node:
+      mount:
+        checkFilesystem:
+          ext4:
+            enabled: true
+      hostPID: true
+      driver:
+        extraEnv:
+          - name: ISCSIADM_HOST_STRATEGY
+            value: nsenter
+          - name: ISCSIADM_HOST_PATH
+            value: /usr/local/sbin/iscsiadm
+        iscsiDirHostPath: /usr/local/etc/iscsi
+        iscsiDirHostPathType: ""
+    csiDriver:
+      name: "org.democratic-csi.iscsi"
+    storageClasses:
+    - name: iscsi-csi
+      defaultClass: false
+      reclaimPolicy: Delete
+      volumeBindingMode: Immediate
+      allowVolumeExpansion: true
+      # annotations:
+      #   k10.kasten.io/forcegenericbackup: "true"
+      parameters:
+        fsType: ext4
+    volumeSnapshotClasses:
+    - name: iscsi-csi
+      deletionPolicy: Delete
+      annotations:
+        k10.kasten.io/is-snapshot-class: "true"
+      parameters:
+        detachedSnapshots: "false"
+    driver:
+      existingConfigSecret: iscsi-driver
+    extraCaCerts: |-
+      ${ca_bundle}
