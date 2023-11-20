@@ -25,8 +25,8 @@ elif [ ! -z "$1" ]; then
 fi
 
 # Define the list of nodes and their respective config files
-nodes=("10.0.3.3" "10.0.3.4" "10.0.3.5")
-configs=("k8s-node1.akchristiansen.com.yaml" "k8s-node2.akchristiansen.com.yaml" "k8s-node3.akchristiansen.com.yaml")
+nodes=("10.0.6.3" "10.0.6.4" "10.0.6.5")
+configs=("k8s-k8s-node1.akchristiansen.com.yaml" "k8s-k8s-node2.akchristiansen.com.yaml" "k8s-k8s-node3.akchristiansen.com.yaml")
 
 # Loop through nodes and apply config, handling errors
 for i in "${!nodes[@]}"; do
