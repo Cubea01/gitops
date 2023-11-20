@@ -6,7 +6,7 @@ spec:
   vault:
     path: pki/sign/istio-role
     server: https://vault-active.vault.svc.cluster.local:8200
-    caBundle: ${cert_manager_cabundle}
+    caBundle: ${ca_bundle_base64}
     auth:
       appRole:
         path: approle

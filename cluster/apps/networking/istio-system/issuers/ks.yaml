@@ -11,6 +11,7 @@ spec:
     - name: cluster-apps-security-cert-manager
     - name: cluster-apps-security-vault
     - name: cluster-apps-networking-istio-system-issuers-secrets
+    - name: flux-variables
   prune: true
   sourceRef:
     kind: GitRepository
@@ -20,6 +21,9 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-issuer-secrets
+        optional: false
+      - kind: Secret
+        name: ca-bundle
         optional: false
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
