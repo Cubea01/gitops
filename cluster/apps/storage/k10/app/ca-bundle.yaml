@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ca-bundle
+  name: custom-ca-bundle-store
   namespace: kasten-io
 data:
   custom-ca-bundle.pem: |

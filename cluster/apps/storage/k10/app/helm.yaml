@@ -35,7 +35,7 @@ spec:
       tokenAuth:
         enabled: true
     cacertconfigmap:
-      name: "ca-bundle"
+      name: "custom-ca-bundle-store"
     encryption:
       primaryKey:
         vaultTransitKeyName: 'k10-transit-key'
