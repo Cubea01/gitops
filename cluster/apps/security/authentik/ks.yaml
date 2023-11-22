@@ -25,6 +25,7 @@ spec:
   dependsOn:
     - name: cluster-apps-security-authentik-secrets
     - name: cluster-apps-networking-istio-system-istiod
+    - name: cluster-apps-storage-csi-nfs
   prune: true
   sourceRef:
     kind: GitRepository
