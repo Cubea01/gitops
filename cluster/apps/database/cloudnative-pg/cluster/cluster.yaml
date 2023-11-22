@@ -30,8 +30,8 @@ spec:
       wal:
         compression: bzip2
         maxParallel: 8
-      destinationPath: s3://postgresql/
-      endpointURL: https://minio.minio-tenant.svc.cluster.local
+      destinationPath: s3://postgres-backups/
+      endpointURL: https://nas-1.akchristiansen.com:9000
       serverName: postgres-v4
       endpointCA:
         name: cloudnative-pg-secret
