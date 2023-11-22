@@ -24,7 +24,7 @@ metadata:
 spec:
   path: ./cluster/apps/database/cloudnative-pg/cluster
   dependsOn:
-  - name: cluster-apps-storage-minio-tenant
+  - name: cluster-apps-storage-csi-nfs
   - name: cluster-apps-database-cloudnative-pg
   prune: true
   sourceRef:
