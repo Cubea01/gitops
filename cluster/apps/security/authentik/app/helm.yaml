@@ -36,19 +36,15 @@ spec:
         port: 25
         from: ${from_email}
       postgresql:
+        host: "postgres-rw.cloudnative-pg.svc.cluster.local"
+        name: "authentik"
+        user: "authentik"
         password: ${postgresql_key}
+        port: 5432
+      redis:
+        host: "redis.redis.svc.cluster.local"
     geoip:
       enabled: true
       accountId: ${geoip_accountid}
       licenseKey: ${geoip_licensekey}
       editionIds: "GeoLite2-City"
-    postgresql:
-      enabled: true
-      postgresqlPassword: ${postgresql_key}
-      persistence:
-        enabled: true
-        storageClass: nfs-csi
-        accessModes:
-          - ReadWriteOnce
-    redis:
-      enabled: true
