@@ -22,7 +22,4 @@ spec:
       sentinel: false
     master:
       persistence:
-        enabled: false
-    replica:
-      persistence:
-        enabled: false
+        storageClass: "nfs-csi"
