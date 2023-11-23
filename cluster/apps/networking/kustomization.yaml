@@ -5,4 +5,4 @@ resources:
   - ./coredns/ks.yaml
   - ./gateway-api/ks.yaml
   - ./istio-system
-  # - ./unifi-controller/ks.yaml
+  - ./unifi-controller/ks.yaml
