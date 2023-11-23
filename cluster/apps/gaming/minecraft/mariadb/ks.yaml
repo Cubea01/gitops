@@ -7,7 +7,7 @@ metadata:
 spec:
   path: ./cluster/apps/gaming/minecraft/mariadb/app
   dependsOn:
-    - name: cluster-apps-storage-iscsi-csi
+    - name: cluster-apps-storage-csi-iscsi
   prune: true
   sourceRef:
     kind: GitRepository
