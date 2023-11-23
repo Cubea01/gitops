@@ -45,7 +45,7 @@ spec:
       externalTrafficPolicy: Cluster
     rootUser:
       user: root
-      password: ${MARIADB_ROOT_PASSWORD}
+      password: "LP5CYZAmD!3mi!"
     galera:
       mariabackup:
         password: $(MARIADB_BACKUP_PASSWORD)
