@@ -42,7 +42,7 @@ spec:
         password: ${postgresql_key}
         port: 5432
       redis:
-        host: "redis.redis.svc.cluster.local"
+        host: "redis-master.redis.svc.cluster.local"
     geoip:
       enabled: true
       accountId: ${geoip_accountid}
