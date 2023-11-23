@@ -7,6 +7,9 @@ metadata:
 spec:
   path: ./cluster/apps/database/redis/app
   prune: true
+  dependsOn:
+  - name: cluster-apps-storage-csi-nfs
+  - name: cluster-apps-networking-istio-system-istiod
   sourceRef:
     kind: GitRepository
     name: github
