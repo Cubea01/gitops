@@ -16,6 +16,7 @@ spec:
         name: bitnami
         namespace: flux-system
   values:
+    architecture: standalone
     auth:
       enabled: false
       sentinel: false
@@ -23,13 +24,5 @@ spec:
       persistence:
         enabled: false
     replica:
-      persistence:
-        enabled: false
-    sentinel:
-      enabled: true
-      masterSet: redis-master
-      getMasterTimeout: 10
-      startupProbe:
-        failureThreshold: 2
       persistence:
         enabled: false
