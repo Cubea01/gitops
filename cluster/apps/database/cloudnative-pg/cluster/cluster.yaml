@@ -12,7 +12,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 100Gi
-    storageClass: "nfs-csi"
+    storageClass: "iscsi-csi"
   superuserSecret:
     name: cloudnative-pg-secret
   # bootstrap:
