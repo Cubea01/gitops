@@ -16,7 +16,7 @@
   "helm-values": {
     "fileMatch": ["^cluster/.+\\.ya?ml$", "^bootstrap/.+\\.ya?ml$"],
   },
-  "cluster": {
+  "kubernetes": {
     "fileMatch": ["^cluster/.+\\.ya?ml$", "^bootstrap/.+\\.ya?ml$"],
   },
   // packageRules: [
