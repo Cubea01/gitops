@@ -34,22 +34,27 @@ spec:
       unifi-ssl:
         image: lscr.io/linuxserver/unifi-network-application:7.5.174
         imagePullPolicy: IfNotPresent
-        command: ["sh", "-c", "mkdir -p /config/data /config/logs && rm -f /config/data/keystore && keytool -import -alias ca -file /usr/lib/unifi/tls/ca.crt -keystore /config/data/keystore -storepass aircontrolenterprise -noprompt && openssl pkcs12 -export -in /usr/lib/unifi/tls/tls.crt -inkey /usr/lib/unifi/tls/tls.key -out /tmp/unifi.p12 -name unifi -passout pass:aircontrolenterprise && keytool -importkeystore -srckeystore /tmp/unifi.p12 -srcstoretype PKCS12 -srcstorepass aircontrolenterprise -destkeystore /config/data/keystore -deststorepass aircontrolenterprise -noprompt && rm /tmp/unifi.p12"]
+        command:
+          [
+            "sh",
+            "-c",
+            "mkdir -p /config/data /config/logs && rm -f /config/data/keystore && keytool -import -alias ca -file /usr/lib/unifi/tls/ca.crt -keystore /config/data/keystore -storepass aircontrolenterprise -noprompt && openssl pkcs12 -export -in /usr/lib/unifi/tls/tls.crt -inkey /usr/lib/unifi/tls/tls.key -out /tmp/unifi.p12 -name unifi -passout pass:aircontrolenterprise && keytool -importkeystore -srckeystore /tmp/unifi.p12 -srcstoretype PKCS12 -srcstorepass aircontrolenterprise -destkeystore /config/data/keystore -deststorepass aircontrolenterprise -noprompt && rm /tmp/unifi.p12",
+          ]
         volumeMounts:
-        - name: unifi
-          mountPath: /config
-        - name: tls-secrets
-          readOnly: true
-          mountPath: /usr/lib/unifi/tls/tls.crt
-          subPath: tls.crt
-        - name: tls-secrets
-          readOnly: true
-          mountPath: /usr/lib/unifi/tls/tls.key
-          subPath: tls.key
-        - name: tls-secrets
-          readOnly: true
-          mountPath: /usr/lib/unifi/tls/ca.crt
-          subPath: ca.crt
+          - name: unifi
+            mountPath: /config
+          - name: tls-secrets
+            readOnly: true
+            mountPath: /usr/lib/unifi/tls/tls.crt
+            subPath: tls.crt
+          - name: tls-secrets
+            readOnly: true
+            mountPath: /usr/lib/unifi/tls/tls.key
+            subPath: tls.key
+          - name: tls-secrets
+            readOnly: true
+            mountPath: /usr/lib/unifi/tls/ca.crt
+            subPath: ca.crt
     sidecars:
       mongodb:
         image: mongo:4.4.24
@@ -57,14 +62,14 @@ spec:
         securityContext:
           runAsUser: 1000
         volumeMounts:
-        - name: mongodb
-          mountPath: /data/db
-        - name: mongodb-init
-          mountPath: /docker-entrypoint-initdb.d/mongo-init-script.js
-          subPath: MONGO_INIT_SCRIPT
+          - name: mongodb
+            mountPath: /data/db
+          - name: mongodb-init
+            mountPath: /docker-entrypoint-initdb.d/mongo-init-script.js
+            subPath: MONGO_INIT_SCRIPT
         ports:
-        - name: mongodb
-          containerPort: 27017
+          - name: mongodb
+            containerPort: 27017
     env:
       PUID: 1000
       PGID: 1000
@@ -75,8 +80,8 @@ spec:
       MEM_LIMIT: 1024
       MEM_STARTUP: 1024
     envFrom:
-    - secretRef:
-        name: unifi-secrets
+      - secretRef:
+          name: unifi-secrets
     service:
       main:
         enabled: true

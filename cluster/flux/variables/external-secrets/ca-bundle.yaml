@@ -11,11 +11,11 @@ spec:
   target:
     name: ca-bundle
   data:
-  - secretKey: ca_bundle
-    remoteRef:
-      key: flux-variables
-      property: ca_bundle
-  - secretKey: ca_bundle_base64
-    remoteRef:
-      key: flux-variables
-      property: ca_bundle_base64
+    - secretKey: ca_bundle
+      remoteRef:
+        key: flux-variables
+        property: ca_bundle
+    - secretKey: ca_bundle_base64
+      remoteRef:
+        key: flux-variables
+        property: ca_bundle_base64

@@ -23,19 +23,19 @@ spec:
           passt: {} # connect using passt mode
           ports: {}
       disks:
-      - name: windows-server-2019
-        cdrom:
-          readOnly: true
-          bus: sata
-        bootOrder: 2
-      - name: virtio-container-disk
-        cdrom:
-          readOnly: true
-          bus: sata
-      - name: dc1-pvc
-        disk:
-          bus: virtio
-        bootOrder: 1
+        - name: windows-server-2019
+          cdrom:
+            readOnly: true
+            bus: sata
+          bootOrder: 2
+        - name: virtio-container-disk
+          cdrom:
+            readOnly: true
+            bus: sata
+        - name: dc1-pvc
+          disk:
+            bus: virtio
+          bootOrder: 1
       features:
         smm:
           enabled: true

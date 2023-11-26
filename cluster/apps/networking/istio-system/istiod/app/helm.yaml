@@ -51,18 +51,18 @@ spec:
       valuesKey: pem
       optional: false
   postRenderers:
-  - kustomize:
-      patchesStrategicMerge:
-      - kind: Deployment
-        apiVersion: apps/v1
-        metadata:
-          name: istiod
-          namespace: istio-system
-        spec:
-          template:
+    - kustomize:
+        patchesStrategicMerge:
+          - kind: Deployment
+            apiVersion: apps/v1
+            metadata:
+              name: istiod
+              namespace: istio-system
             spec:
-              containers:
-              - name: discovery
-                env:
-                  - name: PILOT_CERT_PROVIDER
-                    value: k8s.io/clusterissuers.cert-manager.io/istio-issuer
+              template:
+                spec:
+                  containers:
+                    - name: discovery
+                      env:
+                        - name: PILOT_CERT_PROVIDER
+                          value: k8s.io/clusterissuers.cert-manager.io/istio-issuer

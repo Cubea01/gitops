@@ -6,7 +6,7 @@ metadata:
 spec:
   path: ./cluster/apps/database/cloudnative-pg/app
   dependsOn:
-  - name: cluster-apps-networking-istio-system-istiod
+    - name: cluster-apps-networking-istio-system-istiod
   prune: true
   sourceRef:
     kind: GitRepository
@@ -24,8 +24,8 @@ metadata:
 spec:
   path: ./cluster/apps/database/cloudnative-pg/cluster
   dependsOn:
-  - name: cluster-apps-storage-csi-nfs
-  - name: cluster-apps-database-cloudnative-pg
+    - name: cluster-apps-storage-csi-nfs
+    - name: cluster-apps-database-cloudnative-pg
   prune: true
   sourceRef:
     kind: GitRepository

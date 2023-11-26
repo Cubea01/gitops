@@ -5,7 +5,7 @@ metadata:
   namespace: kubevirt
 spec:
   configuration:
-    developerConfiguration: 
+    developerConfiguration:
       featureGates:
         - "BlockVolume"
         - "Passt"

@@ -7,11 +7,11 @@ spec:
   schedule: 0 0 * * *
   template:
     includedNamespaces:
-    - '*'
+      - "*"
     excludedNamespaces:
-    - cloudnative-pg
-    - kube-system
-    - kube-public
-    - velero
-    - minio
-    - minio-tenant
+      - cloudnative-pg
+      - kube-system
+      - kube-public
+      - velero
+      - minio
+      - minio-tenant

@@ -11,10 +11,10 @@ spec:
   target:
     name: ingress-issuer-approle
   data:
-  - secretKey: secretId
-    remoteRef:
-      key: ingress-issuer-approle
-      property: secretId
+    - secretKey: secretId
+      remoteRef:
+        key: ingress-issuer-approle
+        property: secretId
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer

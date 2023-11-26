@@ -8,7 +8,7 @@ spec:
   path: ./cluster/flux/variables/external-secrets
   prune: true
   dependsOn:
-  - name: cluster-apps-security-external-secrets-stores
+    - name: cluster-apps-security-external-secrets-stores
   sourceRef:
     kind: GitRepository
     name: github

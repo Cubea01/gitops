@@ -13,11 +13,7 @@ spec:
       exportPodCIDR: true
       serviceSelector:
         matchExpressions:
-          - {
-              key: thisFakeSelector,
-              operator: NotIn,
-              values: ["will-match-and-announce-all-services"],
-            }
+          - {key: somekey, operator: NotIn, values: ['never-used-value']}
       neighbors:
         - peerAddress: "10.0.6.1/32"
           peerASN: 65000

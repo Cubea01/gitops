@@ -8,10 +8,10 @@ spec:
   path: ./cluster/apps/storage/k10/app
   prune: true
   dependsOn:
-  - name: cluster-apps-security-external-secrets-stores
-  - name: cluster-apps-storage-csi-iscsi
-  - name: cluster-apps-storage-csi-nfs
-  - name: flux-variables
+    - name: cluster-apps-security-external-secrets-stores
+    - name: cluster-apps-storage-csi-iscsi
+    - name: cluster-apps-storage-csi-nfs
+    - name: flux-variables
   sourceRef:
     kind: GitRepository
     name: github
@@ -38,7 +38,7 @@ spec:
   path: ./cluster/apps/storage/k10/config
   prune: true
   dependsOn:
-  - name: cluster-apps-storage-k10
+    - name: cluster-apps-storage-k10
   sourceRef:
     kind: GitRepository
     name: github

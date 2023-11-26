@@ -28,9 +28,9 @@ spec:
   path: ./cluster/apps/storage/minio/tenant
   prune: true
   dependsOn:
-  - name: cluster-apps-storage-minio
-  - name: cluster-apps-networking-istio-system-istiod
-  - name: cluster-apps-security-cert-manager
+    - name: cluster-apps-storage-minio
+    - name: cluster-apps-networking-istio-system-istiod
+    - name: cluster-apps-security-cert-manager
   sourceRef:
     kind: GitRepository
     name: github

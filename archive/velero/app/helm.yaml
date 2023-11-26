@@ -35,15 +35,15 @@ spec:
             name: plugins
     configuration:
       backupStorageLocation:
-      - name: default
-        provider: aws
-        bucket: velero
-        caCert: ${ca_bundle_base64}
-        config:
-          region: minio
-          s3ForcePathStyle: true
-          s3Url: https://minio-api.akchristiansen.com
-          insecureSkipTLSVerify: false
+        - name: default
+          provider: aws
+          bucket: velero
+          caCert: ${ca_bundle_base64}
+          config:
+            region: minio
+            s3ForcePathStyle: true
+            s3Url: https://minio-api.akchristiansen.com
+            insecureSkipTLSVerify: false
       uploaderType: restic
       defaultBackupStorageLocation: default
       namespace: velero

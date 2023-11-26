@@ -107,8 +107,8 @@ spec:
           - --user-data-dir
           - "/config/.vscode"
         volumeMounts:
-        - name: data
-          mountPath: /data
+          - name: data
+            mountPath: /data
         workingDir: ""
         service:
           enabled: true

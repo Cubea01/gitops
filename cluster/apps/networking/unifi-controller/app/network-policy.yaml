@@ -9,16 +9,16 @@ spec:
       istio.io/gateway-name: unifi-gateway
   ingress:
     - fromEntities:
-      - world
+        - world
       toPorts:
-      - ports:
-        - port: "443"
-          protocol: TCP
-        - port: "80"
-          protocol: TCP
-        - port: "8843"
-          protocol: TCP
-        - port: "8880"
-          protocol: TCP
-        - port: "8080"
-          protocol: TCP
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "80"
+              protocol: TCP
+            - port: "8843"
+              protocol: TCP
+            - port: "8880"
+              protocol: TCP
+            - port: "8080"
+              protocol: TCP

@@ -55,9 +55,9 @@ spec:
       name: pool-0
       resources:
         requests:
-          cpu: '1'
+          cpu: "1"
           memory: 2Gi
-      runtimeClassName: ''
+      runtimeClassName: ""
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: Always
@@ -73,10 +73,10 @@ spec:
             - ReadWriteOnce
           resources:
             requests:
-              storage: '17895697066'
+              storage: "17895697066"
           storageClassName: nfs-csi
       volumesPerServer: 2
   requestAutoCert: false
   serviceAccountName: k8s-sa
 scheduler:
-  name: ''
+  name: ""

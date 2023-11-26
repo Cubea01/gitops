@@ -4,7 +4,7 @@ metadata:
   name: data0-k8s-pool-0-0
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -28,7 +28,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -36,7 +36,7 @@ metadata:
   name: data0-k8s-pool-0-1
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -60,7 +60,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -68,7 +68,7 @@ metadata:
   name: data0-k8s-pool-0-2
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -92,7 +92,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -100,7 +100,7 @@ metadata:
   name: data1-k8s-pool-0-0
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -124,7 +124,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -132,7 +132,7 @@ metadata:
   name: data1-k8s-pool-0-1
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -156,7 +156,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -164,7 +164,7 @@ metadata:
   name: data1-k8s-pool-0-2
 spec:
   capacity:
-    storage: '17895697066'
+    storage: "17895697066"
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -188,4 +188,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: '17895697066'
+      storage: "17895697066"

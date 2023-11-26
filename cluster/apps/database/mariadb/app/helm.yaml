@@ -63,11 +63,11 @@ spec:
           type: "RuntimeDefault"
       resources:
         limits:
-           cpu: 1200m
-           memory: 1000Mi
+          cpu: 1200m
+          memory: 1000Mi
         requests:
-           cpu: 500m
-           memory: 500Mi
+          cpu: 500m
+          memory: 500Mi
       livenessProbe:
         enabled: true
         initialDelaySeconds: 120

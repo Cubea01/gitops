@@ -3,8 +3,8 @@ kind: Namespace
 metadata:
   name: linkerd
   labels:
-    linkerd.io/is-control-plane: "true" 
-    config.linkerd.io/admission-webhooks: "disabled" 
+    linkerd.io/is-control-plane: "true"
+    config.linkerd.io/admission-webhooks: "disabled"
     linkerd.io/control-plane-ns: "linkerd"
     pod-security.kubernetes.io/enforce: privileged
   annotations:

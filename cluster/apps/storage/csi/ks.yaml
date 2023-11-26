@@ -27,7 +27,7 @@ spec:
   path: ./cluster/apps/storage/csi/secrets
   prune: true
   dependsOn:
-  - name: cluster-apps-security-external-secrets-stores
+    - name: cluster-apps-security-external-secrets-stores
   sourceRef:
     kind: GitRepository
     name: github
@@ -44,9 +44,9 @@ spec:
   path: ./cluster/apps/storage/csi/iscsi
   prune: true
   dependsOn:
-  - name: cluster-apps-storage-csi-snapshot-controller
-  - name: cluster-apps-storage-csi-secrets
-  - name: flux-variables
+    - name: cluster-apps-storage-csi-snapshot-controller
+    - name: cluster-apps-storage-csi-secrets
+    - name: flux-variables
   sourceRef:
     kind: GitRepository
     name: github
@@ -73,9 +73,9 @@ spec:
   path: ./cluster/apps/storage/csi/nfs
   prune: true
   dependsOn:
-  - name: cluster-apps-storage-csi-snapshot-controller
-  - name: cluster-apps-storage-csi-secrets
-  - name: flux-variables
+    - name: cluster-apps-storage-csi-snapshot-controller
+    - name: cluster-apps-storage-csi-secrets
+    - name: flux-variables
   sourceRef:
     kind: GitRepository
     name: github

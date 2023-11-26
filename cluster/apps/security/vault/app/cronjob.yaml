@@ -24,49 +24,49 @@ spec:
             app: vault-snapshot-agent
         spec:
           volumes:
-          - name: share
-            emptyDir: {}
-          - name: ca-volume
-            secret:
-              secretName: vault-snapshot-agent-ca
+            - name: share
+              emptyDir: {}
+            - name: ca-volume
+              secret:
+                secretName: vault-snapshot-agent-ca
           containers:
-          - name: snapshot
-            image: hashicorp/vault:1.14
-            imagePullPolicy: IfNotPresent
-            command:
-            - /bin/sh
-            args:
-            - -ec
-            - |
-              export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID);
-              vault operator raft snapshot save /share/vault-raft.snap; 
-            envFrom:
-            - secretRef:
-                name: vault-snapshot-agent-token
-            env:
-            - name: VAULT_ADDR
-              value: https://vault-active.vault.svc.cluster.local:8200
-            volumeMounts:
-            - mountPath: /share
-              name: share
-            - name: ca-volume
-              mountPath: /etc/ssl/certs
-          - name: upload
-            image: amazon/aws-cli:2.13.30
-            imagePullPolicy: IfNotPresent
-            command:
-            - /bin/sh
-            args:
-            - -ec
-            - |
-              until [ -f /share/vault-raft.snap ]; do sleep 5; done;
-              aws --ca-bundle /etc/ssl/certs/ca.crt --endpoint-url $AWS_ENDPOINT_URL s3 cp /share/vault-raft.snap s3://vault-backups/vault_raft_$(date +"%Y%m%d_%H%M%S").snap;
-            envFrom:
-            - secretRef:
-                name: vault-snapshot-s3-token
-            volumeMounts:
-            - mountPath: /share
-              name: share
-            - name: ca-volume
-              mountPath: /etc/ssl/certs
+            - name: snapshot
+              image: hashicorp/vault:1.14
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+              args:
+                - -ec
+                - |
+                  export VAULT_TOKEN=$(vault write -field=token auth/approle/login role_id=$VAULT_APPROLE_ROLE_ID secret_id=$VAULT_APPROLE_SECRET_ID);
+                  vault operator raft snapshot save /share/vault-raft.snap;
+              envFrom:
+                - secretRef:
+                    name: vault-snapshot-agent-token
+              env:
+                - name: VAULT_ADDR
+                  value: https://vault-active.vault.svc.cluster.local:8200
+              volumeMounts:
+                - mountPath: /share
+                  name: share
+                - name: ca-volume
+                  mountPath: /etc/ssl/certs
+            - name: upload
+              image: amazon/aws-cli:2.13.30
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+              args:
+                - -ec
+                - |
+                  until [ -f /share/vault-raft.snap ]; do sleep 5; done;
+                  aws --ca-bundle /etc/ssl/certs/ca.crt --endpoint-url $AWS_ENDPOINT_URL s3 cp /share/vault-raft.snap s3://vault-backups/vault_raft_$(date +"%Y%m%d_%H%M%S").snap;
+              envFrom:
+                - secretRef:
+                    name: vault-snapshot-s3-token
+              volumeMounts:
+                - mountPath: /share
+                  name: share
+                - name: ca-volume
+                  mountPath: /etc/ssl/certs
           restartPolicy: OnFailure

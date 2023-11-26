@@ -8,9 +8,9 @@ spec:
   path: ./cluster/apps/database/mariadb/app
   prune: true
   dependsOn:
-  - name: cluster-apps-storage-csi-iscsi
-  - name: cluster-apps-networking-istio-system-istiod
-  - name: cluster-apps-security-external-secrets-stores
+    - name: cluster-apps-storage-csi-iscsi
+    - name: cluster-apps-networking-istio-system-istiod
+    - name: cluster-apps-security-external-secrets-stores
   sourceRef:
     kind: GitRepository
     name: github

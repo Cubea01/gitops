@@ -38,8 +38,8 @@ spec:
       name: "custom-ca-bundle-store"
     encryption:
       primaryKey:
-        vaultTransitKeyName: 'k10-transit-key'
-        vaultTransitPath: 'k10-transit'
+        vaultTransitKeyName: "k10-transit-key"
+        vaultTransitPath: "k10-transit"
     vault:
       role: "k10-transit"
       address: "https://vault-active.vault.svc.cluster.local:8200"

@@ -86,7 +86,7 @@ spec:
       issuer:
         scheme: kubernetes.io/tls
     policyValidator:
-      externalSecret: true 
+      externalSecret: true
       caBundle: |
         -----BEGIN CERTIFICATE-----
         MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
@@ -112,7 +112,7 @@ spec:
         MA==
         -----END CERTIFICATE-----
     proxyInjector:
-      externalSecret: true 
+      externalSecret: true
       caBundle: |
         -----BEGIN CERTIFICATE-----
         MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
@@ -138,7 +138,7 @@ spec:
         MA==
         -----END CERTIFICATE-----
     profileValidator:
-      externalSecret: true 
+      externalSecret: true
       caBundle: |
         -----BEGIN CERTIFICATE-----
         MIIDvTCCAqWgAwIBAgIUF5VPQtwFa6d2MuiMZov8JNbd6gcwDQYJKoZIhvcNAQEL
