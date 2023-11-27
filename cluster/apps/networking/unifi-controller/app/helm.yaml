@@ -57,7 +57,7 @@ spec:
             subPath: ca.crt
     sidecars:
       mongodb:
-        image: mongo:4.4.24
+        image: mongo:7.0.3
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 1000
