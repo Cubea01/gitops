@@ -29,10 +29,10 @@ spec:
       type: deployment
     image:
       repository: lscr.io/linuxserver/unifi-network-application
-      tag: 7.5.174
+      tag: 7.5.187
     initContainers:
       unifi-ssl:
-        image: lscr.io/linuxserver/unifi-network-application:7.5.174
+        image: lscr.io/linuxserver/unifi-network-application:7.5.187
         imagePullPolicy: IfNotPresent
         command:
           [
