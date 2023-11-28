@@ -52,7 +52,7 @@ spec:
                 - name: ca-volume
                   mountPath: /etc/ssl/certs
             - name: upload
-              image: amazon/aws-cli:2.13.39
+              image: amazon/aws-cli:2.14.0
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/sh
