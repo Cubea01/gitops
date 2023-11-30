@@ -5,7 +5,7 @@ resources:
   - ./creative/ks.yaml
   # - ./hardcore/ks.yaml
   # - ./lobby/ks.yaml
-  - ./mariadb/ks.yaml
+  # - ./mariadb/ks.yaml
   # - ./survival/ks.yaml
   # - ./uhc/ks.yaml
   - ./namespace.yaml
