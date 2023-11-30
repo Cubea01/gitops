@@ -6,8 +6,8 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-gaming-minecraft-mariadb
-    - name: cluster-apps-storage-iscsi-csi
+    - name: cluster-apps-database-mariadb
+    - name: cluster-apps-storage-csi-iscsi
   path: ./cluster/apps/gaming/minecraft/hardcore/app
   prune: true
   sourceRef:
@@ -21,8 +21,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 3m
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: cluster-settings
-        optional: false
