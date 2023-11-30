@@ -25,29 +25,51 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    securityContext:
-      runAsUser: 1000
-    initContainers:
-      chown-sidecar:
-        image: busybox:latest
-        command: ["sh", "-c", "chown -R 1000:1000 /server"]
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-          - name: data
-            mountPath: /server
-        securityContext:
-          runAsUser: 0
-    controller:
-      type: deployment
-    image:
-      repository: itzg/bungeecord
-      tag: latest
-    env:
-      UID: 1000
-      TZ: America/Anchorage
-      BUNGEE_JAR_FILE: "/server/server.jar"
-      TYPE: CUSTOM
-      MEMORY: 512M
+    defaultPodOptions:
+      automountServiceAccountToken: false
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: itzg/bungeecord
+              tag: latest
+              pullPolicy: IfNotPresent
+            env:
+              UID: 1000
+              TZ: America/Anchorage
+              BUNGEE_JAR_FILE: "/server/server.jar"
+              TYPE: CUSTOM
+              MEMORY: 512M
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 25577
+                  initialDelaySeconds: 10
+                  periodSeconds: 5
+                  timeoutSeconds: 1
+                  failureThreshold: 20
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 600m
+                memory: 600Mi
+            securityContext:
+              runAsUser: 1000
+        initContainers:
+          chown-sidercar:
+            image:
+              repository: busybox
+              tag: latest
+              pullPolicy: IfNotPresent
+            command: ["sh", "-c", "chown -R 1000:1000 /server"]
+            securityContext:
+              runAsUser: 0
     service:
       main:
         enabled: false
@@ -80,55 +102,10 @@ spec:
             protocol: TCP
             targetPort: 25577
     persistence:
-      data:
+      bungeecord-data:
         enabled: true
-        type: pvc
-        accessMode: ReadWriteOnce
-        size: 100Gi
-        mountPath: /server
-        storageClass: iscsi-csi
-        retain: true
-    resources:
-      requests:
-        cpu: 600m
-        memory: 600Mi
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          tcpSocket:
-            port: 25577
-          initialDelaySeconds: 60
-          periodSeconds: 5
-          timeoutSeconds: 1
-          failureThreshold: 20
-      readiness: *probes
-      startup:
-        enabled: false
-    addons:
-      codeserver:
-        enabled: true
-        env: {}
-        args:
-          - --auth
-          - none
-          - --user-data-dir
-          - "/config/.vscode"
-        volumeMounts:
-          - name: data
-            mountPath: /server
-        workingDir: ""
-        service:
-          enabled: true
-          type: ClusterIP
-          ports:
-            codeserver:
-              port: 12321
-              enabled: true
-              protocol: TCP
-              targetPort: 12321
-          annotations: {}
-          labels: {}
-        securityContext:
-          runAsUser: 1000
+        type: persistentVolumeClaim
+        existingClaim: bungeecord-data
+        globalMounts:
+          - path: /server
+            readOnly: false
