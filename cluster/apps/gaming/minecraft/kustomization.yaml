@@ -5,6 +5,6 @@ resources:
   - ./creative/ks.yaml
   # - ./hardcore/ks.yaml
   - ./lobby/ks.yaml
-  # - ./survival/ks.yaml
+  - ./survival/ks.yaml
   # - ./uhc/ks.yaml
   - ./namespace.yaml
