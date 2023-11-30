@@ -27,9 +27,6 @@ data:
     }
     akchristiansen.com:53 {
         hosts {
-            10.0.3.3 node1.akchristiansen.com
-            10.0.3.4 node2.akchristiansen.com
-            10.0.3.5 node3.akchristiansen.com
             10.0.0.3 vault.akchristiansen.com
             10.0.0.4 auth.akchristiansen.com
             10.0.0.5 unifi.akchristiansen.com
