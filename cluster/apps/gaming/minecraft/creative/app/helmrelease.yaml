@@ -90,7 +90,7 @@ spec:
             port: 25575
             protocol: TCP
     persistence:
-      unifi-data:
+      creative-data:
         enabled: true
         type: persistentVolumeClaim
         existingClaim: creative-data
