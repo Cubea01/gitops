@@ -20,7 +20,7 @@ spec:
       kind: HelmRelease
       name: k10
       namespace: kasten-io
-  interval: 5m
+  interval: 10m
   retryInterval: 10m
   timeout: 20m
   postBuild:
