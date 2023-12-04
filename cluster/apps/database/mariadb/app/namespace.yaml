@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   name: mariadb
   labels:
-    istio-injection: enabled
+    istio-injection: disabled
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline
