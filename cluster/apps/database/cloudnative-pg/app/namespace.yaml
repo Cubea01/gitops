@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   name: cloudnative-pg
   labels:
-    istio-injection: disabled
+    istio-injection: enabled
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline

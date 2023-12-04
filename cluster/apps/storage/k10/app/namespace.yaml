@@ -3,5 +3,6 @@ kind: Namespace
 metadata:
   name: kasten-io
   labels:
+    istio-injection: enabled
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline
