@@ -11,7 +11,6 @@ spec:
     - name: cluster-apps-networking-istio-system-base
     - name: cluster-apps-networking-istio-system-cni
     - name: cluster-apps-networking-istio-system-issuers
-    - name: cluster-apps-networking-istio-system-istiod-secrets
   prune: true
   sourceRef:
     kind: GitRepository
@@ -21,20 +20,4 @@ spec:
       kind: HelmRelease
       name: istiod
       namespace: istio-system
-  wait: true
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cluster-apps-networking-istio-system-istiod-secrets
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./cluster/apps/networking/istio-system/istiod/secrets
-  dependsOn:
-    - name: cluster-apps-security-external-secrets-stores
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: github
   wait: true

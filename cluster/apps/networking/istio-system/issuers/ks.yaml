@@ -10,7 +10,6 @@ spec:
   dependsOn:
     - name: cluster-apps-security-cert-manager
     - name: cluster-apps-security-vault
-    - name: cluster-apps-networking-istio-system-issuers-secrets
     - name: flux-variables
   prune: true
   sourceRef:
@@ -25,19 +24,3 @@ spec:
       - kind: Secret
         name: ca-bundle
         optional: false
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cluster-apps-networking-istio-system-issuers-secrets
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./cluster/apps/networking/istio-system/issuers/secrets
-  dependsOn:
-    - name: cluster-apps-security-external-secrets-stores
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: github
-  wait: true
