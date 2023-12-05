@@ -25,5 +25,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    spegel:
+      containerdRegistryConfigPath: /etc/cri/conf.d
     serviceMonitor:
       enabled: false
