@@ -32,7 +32,7 @@ data:
             10.0.0.5 unifi.akchristiansen.com
             10.0.0.6 minio-api.akchristiansen.com
             10.0.0.7 mc.gageserver.com
-            10.0.0.8 minio.akchristiansen.com
+            10.0.0.8 k10.akchristiansen.com
             ttl 3600
             reload 0
             no_reverse

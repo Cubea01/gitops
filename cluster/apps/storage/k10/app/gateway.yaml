@@ -1,0 +1,65 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: k10-gateway
+  namespace: kasten-io
+  annotations:
+    io.cilium/lb-ipam-ips: 10.0.0.8
+    cert-manager.io/cluster-issuer: ingress-issuer
+spec:
+  gatewayClassName: istio
+  listeners:
+    - name: https
+      hostname: k10.akchristiansen.com
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: tls-secrets
+      allowedRoutes:
+        namespaces:
+          from: Same
+    - name: http
+      hostname: k10.akchristiansen.com
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: https
+  namespace: kasten-io
+spec:
+  parentRefs:
+    - name: k10-gateway
+      sectionName: https
+  hostnames: ["k10.akchristiansen.com"]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: gateway
+          port: 8000
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: http-filter-redirect
+  namespace: kasten-io
+spec:
+  parentRefs:
+    - name: k10-gateway
+      sectionName: http
+  hostnames: ["k10.akchristiansen.com"]
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
