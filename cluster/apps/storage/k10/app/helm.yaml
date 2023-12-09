@@ -48,9 +48,4 @@ spec:
     auth:
       oidcAuth:
         enabled: true
-        prompt: "login" #The prompt type to be requested with the OIDC provider. Default is select_account.
-        usernameClaim: "email" #Claim to be used as the username
-        groupClaim: "groups" #Name of a custom OpenID Connect claim for specifying user groups
         secretName: "oidc-secret"
-        sessionDuration: "1h" #Maximum OIDC session duration. Default value is 1 hour
-        refreshTokenSupport: false #Enable Refresh Token support. Disabled by default
