@@ -17,35 +17,6 @@ spec:
       interval: 5m
   install:
     createNamespace: true
-  values:
-    networkPolicy:
-      create: true
-    global:
-      persistence:
-        mountPath: "/mnt/k10state"
-        enabled: true
-        storageClass: "nfs-csi"
-        accessMode: ReadWriteOnce
-        size: 20Gi
-    eula:
-      accept: true
-      company: "No Company"
-      email: "gage@gageserver.com"
-    cacertconfigmap:
-      name: "custom-ca-bundle-store"
-    encryption:
-      primaryKey:
-        vaultTransitKeyName: "k10-transit-key"
-        vaultTransitPath: "k10-transit"
-    vault:
-      role: "k10-transit"
-      address: "https://vault-active.vault.svc.cluster.local:8200"
-    prometheus:
-      server:
-        enabled: false
-    grafana:
-      enabled: false
-    auth:
-      oidcAuth:
-        enabled: true
-        secretName: "oidc-secret"
+  valuesFrom:
+    - kind: Secret
+      name: helm-values

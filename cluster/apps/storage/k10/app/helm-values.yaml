@@ -1,0 +1,17 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: helm-values
+  namespace: kasten-io
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: cluster-secrets
+    kind: ClusterSecretStore
+  target:
+    name: helm-values
+  data:
+    - secretKey: values.yaml
+      remoteRef:
+        key: k10-secrets
+        property: helm-values
