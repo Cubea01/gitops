@@ -35,7 +35,7 @@ spec:
               - mongodb
             image:
               repository: lscr.io/linuxserver/unifi-network-application
-              tag: 8.0.7
+              tag: 8.0.24
               pullPolicy: IfNotPresent
             env:
               PUID: 1000
@@ -99,7 +99,7 @@ spec:
           unifi-ssl:
             image:
               repository: lscr.io/linuxserver/unifi-network-application
-              tag: 8.0.7
+              tag: 8.0.24
               pullPolicy: IfNotPresent
             command:
               [
