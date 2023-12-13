@@ -12,7 +12,7 @@ spec:
     name: github
   healthChecks:
     - apiVersion: apps/v1
-      kind: DaemonSet
+      kind: Deployment
       name: descheduler
       namespace: descheduler
   interval: 30m
