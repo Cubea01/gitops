@@ -1,0 +1,56 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: yatai
+  namespace: yatai-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: bentoml
+      version: 1.1.13
+      sourceRef:
+        kind: HelmRepository
+        name: bentoml
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 80
+
+    postgresql:
+      host: postgres-rw.cloudnative-pg.svc.cluster.local
+      port: 5432
+      user: yatai
+      database: yatai
+      sslmode: disable
+      passwordExistingSecretName: 'postgres-secret'
+      passwordExistingSecretKey: 'postgres-secret'
+      maxOpenConns: 10
+      maxIdleConns: 10
+      connMaxLifetime: 15m
+
+    s3:
+      endpoint: 'https://nas-1.akchristiansen.com:9000'
+      region: 'minio'
+      bucketName: 'yatai'
+      secure: false
+      accessKeyExistingSecretName: 's3-secret'
+      aceessKeyExistingSecretKey: 'access_key'
+      secretKeyExistingSecretName: 's3-secret'
+      secretKeyExistingSecretKey: 'secret_key'
+
+    enableHostTimeZone: true
