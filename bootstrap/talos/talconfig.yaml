@@ -1,6 +1,6 @@
 clusterName: k8s
 
-talosVersion: v1.5.5
+talosVersion: v1.6.1
 kubernetesVersion: 1.28.1
 endpoint: https://k8s.akchristiansen.com:6443
 
@@ -12,6 +12,8 @@ additionalMachineCertSans:
   - 10.0.6.1
 additionalApiServerCertSans:
   - 10.0.6.1
+  - 127.0.0.1
+  - k8s.akchristiansen.com
 clusterPodNets:
   - 10.244.0.0/16
 clusterSvcNets:
@@ -67,6 +69,13 @@ nodes:
           - network: 0.0.0.0/0
             gateway: 10.0.6.1
 controlPlane:
+  schematic:
+    customization:
+      systemExtensions:
+        officialExtensions:
+          - siderolabs/iscsi-tools
+          - siderolabs/nonfree-kmod-nvidia
+          - siderolabs/nvidia-container-toolkit
   patches:
     - "@./inlinemanifests.yaml"
     - |-
@@ -112,11 +121,6 @@ controlPlane:
             keys:
               - nodeID: {}
                 slot: 0
-        install:
-          extensions:
-            - image: ghcr.io/siderolabs/iscsi-tools:v0.1.4@sha256:8bc04a227b188fb94af94b75c1fa47824c4b6a506dd2c0a7c38a098edbff703a
-            - image: ghcr.io/siderolabs/nonfree-kmod-nvidia:535.54.03-v1.5.5
-            - image: ghcr.io/siderolabs/nvidia-container-toolkit:535.54.03-v1.13.5
         kernel:
           modules:
             - name: nvidia
@@ -130,3 +134,16 @@ controlPlane:
           net.core.rmem_max: "33554432"
           net.core.wmem_max: "33554432"
           net.core.bpf_jit_harden: 1
+        files:
+          - op: overwrite
+            path: /etc/nfsmount.conf
+            permissions: 0o644
+            content: |
+              [ NFSMount_Global_Options ]
+              nfsvers=4.2
+              hard=True
+              noatime=True
+              nodiratime=True
+              rsize=131072
+              wsize=131072
+              nconnect=8
