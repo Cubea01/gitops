@@ -3,7 +3,7 @@ apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
   name: "allow-authentik-to-cloudnative-pg"
-  namespace: cloudnative-ng
+  namespace: cloudnative-pg
 spec:
   endpointSelector:
     matchLabels:
