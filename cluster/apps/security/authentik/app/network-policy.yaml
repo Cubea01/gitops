@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-world-to-authentik"
+  namespace: authentik
+spec:
+  endpointSelector:
+    matchLabels:
+      istio.io/gateway-name: authentik-gateway
+  ingress:
+    - fromEndpoints:
+        - world
+      toPorts:
+        - ports:
+            - port: '80'
+              protocol: TCP
+            - port: '443'
+              protocol: TCP

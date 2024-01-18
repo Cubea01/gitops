@@ -1,7 +1,8 @@
+---
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "from-world-to-unifi-gateway"
+  name: "allow-world-to-unifi"
   namespace: unifi-controller
 spec:
   endpointSelector:

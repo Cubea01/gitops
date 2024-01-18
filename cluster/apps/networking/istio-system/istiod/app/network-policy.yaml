@@ -1,0 +1,17 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-to-istiod"
+  namespace: istio-system
+spec:
+  endpointSelector:
+    matchLabels:
+      app: istiod
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: '15012'
+              protocol: TCP
