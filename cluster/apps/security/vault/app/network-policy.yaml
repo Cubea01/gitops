@@ -20,12 +20,13 @@ apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
   name: "allow-vault-to-vault-internal"
+  namespace: vault
 spec:
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: vault
   ingress:
-    - FromEndpoints:
+    - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: vault
             app.kubernetes.io/name: vault
