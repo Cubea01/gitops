@@ -1,0 +1,17 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-cluster-to-gateway-api-webhook"
+  namespace: gateway-system
+spec:
+  endpointSelector:
+    matchLabels:
+      name: gateway-api-admission-server
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: '443'
+              protocol: TCP

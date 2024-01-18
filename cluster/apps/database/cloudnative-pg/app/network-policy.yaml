@@ -17,3 +17,20 @@ spec:
         - ports:
             - port: '5432'
               protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-cluster-to-cloudnative-pg-webhook"
+  namespace: cloudnative-pg
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: cloudnative-pg
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: '443'
+              protocol: TCP
