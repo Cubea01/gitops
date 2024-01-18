@@ -9,7 +9,7 @@ spec:
     matchLabels:
       istio.io/gateway-name: authentik-gateway
   ingress:
-    - fromEndpoints:
+    - fromEntities:
         - world
       toPorts:
         - ports:

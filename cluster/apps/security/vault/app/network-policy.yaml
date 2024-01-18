@@ -9,7 +9,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: vault
   ingress:
-    - fromEndpoints:
+    - fromEntities:
         - all
       toPorts:
         - ports:
