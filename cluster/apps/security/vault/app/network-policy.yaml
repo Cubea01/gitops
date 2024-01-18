@@ -15,3 +15,21 @@ spec:
         - ports:
             - port: '8200'
               protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-vault-to-vault-internal"
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: vault
+  ingress:
+    - FromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: vault
+            app.kubernetes.io/name: vault
+      toPorts:
+        - ports:
+            - port: '8201'
+              protocol: TCP
