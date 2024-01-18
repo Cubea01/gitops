@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-minecraft-to-mariadb"
+  namespace: mariadb
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: mariadb
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: minecraft
+            app.kubernetes.io/name: minecraft
+      toPorts:
+        - ports:
+            - port: '3306'
+              protocol: TCP
