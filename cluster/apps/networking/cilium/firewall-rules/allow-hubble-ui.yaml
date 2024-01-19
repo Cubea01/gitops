@@ -7,12 +7,12 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      name: hubble-relay
+      k8s-app: hubble-relay
   ingress:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: kube-system
-            name: hubble-ui
+            k8s-app: hubble-ui
       toPorts:
         - ports:
             - port: '4245'
