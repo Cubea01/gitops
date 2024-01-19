@@ -1,0 +1,20 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-kube-api-to-metrics-server"
+  namespace: metrics-server
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: metrics-server
+  ingress:
+    - fromEntities:
+        kube-apiserver
+      toPorts:
+        - ports:
+            - port: '10250'
+              protocol: TCP
+        - ports:
+            - port: '443'
+              protocol: TCP
