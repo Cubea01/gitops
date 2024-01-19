@@ -4,7 +4,9 @@ kind: CiliumClusterwideNetworkPolicy
 metadata:
   name: "allow-global-egress"
 spec:
-  endpointSelector: {}
+  endpointSelector:
+    matchLabels:
+      {}
   egress:
     - toEntities:
         - all
