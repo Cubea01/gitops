@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: metrics-server
   ingress:
     - fromEntities:
-        kube-apiserver
+        - kube-apiserver
       toPorts:
         - ports:
             - port: '10250'
