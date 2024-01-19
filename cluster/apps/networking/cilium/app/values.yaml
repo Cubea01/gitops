@@ -54,7 +54,7 @@ hubble:
     rollOutPods: true
 
 policyEnforcementMode: "always"
-policyAuditMode: true
+policyAuditMode: false
 
 encryption:
   enabled: true
