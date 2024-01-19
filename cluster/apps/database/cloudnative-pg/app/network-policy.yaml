@@ -50,9 +50,3 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: cloudnative-pg
-      toPorts:
-        - ports:
-            - port: '5432'
-              protocol: TCP
-            - port: '8000'
-              protocol: TCP
