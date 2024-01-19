@@ -17,3 +17,21 @@ spec:
               protocol: TCP
             - port: '443'
               protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-istio-to-authentik"
+  namespace: authentik
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: authentik
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            istio.io/gateway-name: authentik-gateway
+      toPorts:
+        - ports:
+            - port: '80'
+              protocol: TCP
