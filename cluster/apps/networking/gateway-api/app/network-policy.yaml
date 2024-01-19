@@ -15,5 +15,7 @@ spec:
         - ports:
             - port: '9292'
               protocol: TCP
+            - port: '8443'
+              protocol: TCP
             - port: '443'
               protocol: TCP
