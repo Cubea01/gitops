@@ -12,7 +12,6 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: minecraft
-            app.kubernetes.io/name: minecraft
       toPorts:
         - ports:
             - port: '3306'
