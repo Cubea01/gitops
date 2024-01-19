@@ -15,3 +15,5 @@ spec:
         - ports:
             - port: '10250'
               protocol: TCP
+            - port: '443'
+              protocol: TCP
