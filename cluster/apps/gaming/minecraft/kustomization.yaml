@@ -8,3 +8,4 @@ resources:
   - ./survival/ks.yaml
   # - ./uhc/ks.yaml
   - ./namespace.yaml
+  - ./network-policy.yaml
