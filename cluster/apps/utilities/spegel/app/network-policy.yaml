@@ -1,0 +1,22 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-nodes-to-spegel"
+  namespace: spegel
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: spegel
+  ingress:
+    - fromEntities:
+        - kube-apiserver
+        - host
+        - remote-node
+      toPorts:
+        - ports:
+            - port: '5000'
+              protocol: TCP
+        - ports:
+            - port: '5001'
+              protocol: TCP
