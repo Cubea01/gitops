@@ -50,6 +50,7 @@ spec:
     - fromEndpoints:
         - matchLabels:
             cnpg.io/cluster: postgres
+            app.kubernetes.io/name: cloudnative-pg
       toPorts:
         - ports:
             - port: '5432'
