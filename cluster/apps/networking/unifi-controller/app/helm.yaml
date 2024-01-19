@@ -70,7 +70,7 @@ spec:
           mongodb:
             image:
               repository: mongo
-              tag: 4.4.27
+              tag: 4.4.28
               pullPolicy: IfNotPresent
             probes:
               liveness: &mongoprobes
