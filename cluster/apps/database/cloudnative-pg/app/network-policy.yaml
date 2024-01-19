@@ -36,3 +36,21 @@ spec:
               protocol: TCP
             - port: '443'
               protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-postgres-to-postgres"
+  namespace: cloudnative-pg
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            cnpg.io/cluster: postgres
+      toPorts:
+        - ports:
+            - port: '5432'
+              protocol: TCP
