@@ -39,9 +39,7 @@ spec:
             istio.io/gateway-name: unifi-gateway
       toPorts:
         - ports:
-            - port: "443"
-              protocol: TCP
-            - port: "80"
+            - port: "8443"
               protocol: TCP
             - port: "8843"
               protocol: TCP
