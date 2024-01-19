@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-hubble-ui-to-hubble-relay"
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      name: hubble-relay
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            name: hubble-ui
+      toPorts:
+        - ports:
+            - port: '4245'
+              protocol: TCP
