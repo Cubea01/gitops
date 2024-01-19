@@ -49,8 +49,7 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            cnpg.io/cluster: postgres
-            app.kubernetes.io/name: cloudnative-pg
+            k8s:io.kubernetes.pod.namespace: cloudnative-pg
       toPorts:
         - ports:
             - port: '5432'
