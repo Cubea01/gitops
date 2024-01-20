@@ -2,25 +2,6 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "allow-authentik-to-cloudnative-pg"
-  namespace: cloudnative-pg
-spec:
-  endpointSelector:
-    matchLabels:
-      cnpg.io/cluster: postgres
-  ingress:
-    - fromEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: authentik
-            app.kubernetes.io/name: authentik
-      toPorts:
-        - ports:
-            - port: '5432'
-              protocol: TCP
----
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
   name: "allow-cluster-to-cloudnative-pg-webhook"
   namespace: cloudnative-pg
 spec:
@@ -50,3 +31,41 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: cloudnative-pg
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-authentik-to-cloudnative-pg"
+  namespace: cloudnative-pg
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: authentik
+            app.kubernetes.io/name: authentik
+      toPorts:
+        - ports:
+            - port: '5432'
+              protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-headscale-to-cloudnative-pg"
+  namespace: cloudnative-pg
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: headscale
+            app.kubernetes.io/name: headscale
+      toPorts:
+        - ports:
+            - port: '5432'
+              protocol: TCP
