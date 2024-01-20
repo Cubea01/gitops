@@ -10,7 +10,7 @@ spec:
       istio.io/gateway-name: authentik-gateway
   ingress:
     - fromEntities:
-        - world
+        - all
       toPorts:
         - ports:
             - port: '80'
