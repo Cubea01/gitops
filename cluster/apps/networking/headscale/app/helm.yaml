@@ -1,0 +1,157 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: headscale
+  namespace: headscale
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+    controllers:
+      main:
+        containers:
+          main:
+            image:
+              repository: ghcr.io/juanfont/headscale
+              tag: 0.22.3
+              pullPolicy: IfNotPresent
+            env:
+              PUID: 1000
+              PGID: 1000
+              TZ: America/Anchorage
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8080
+                  initialDelaySeconds: 5
+                  periodSeconds: 2
+                  timeoutSeconds: 1
+                  failureThreshold: 20
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 1
+                memory: 1500Mi
+          headscale-ui:
+            dependsOn:
+              - main
+            image:
+              repository: ghcr.io/gurucomputing/headscale-ui
+              tag: 2023.01.30-beta-1
+              pullPolicy: IfNotPresent
+            probes:
+              liveness: &uiprobes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 80
+                  initialDelaySeconds: 5
+                  periodSeconds: 2
+                  timeoutSeconds: 1
+                  failureThreshold: 20
+              readiness: *uiprobes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 500m
+                memory: 500Mi
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            enabled: false
+            port: 0
+          metrics:
+            enabled: true
+            port: 9090
+            protocol: TCP
+          grpc:
+            enabled: true
+            port: 50443
+            protocol: TCP
+      lb:
+        enabled: true
+        primary: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          "io.cilium/lb-ipam-ips": "10.0.0.9"
+        ports:
+          http:
+            enabled: false
+            port: 80
+          derp:
+            enabled: true
+            port: 3478
+            protocol: UDP
+          headscale:
+            enabled: true
+            port: 443
+            protocol: TCP
+      headscale-ui:
+        enabled: true
+        primary: false
+        controller: main
+        ports:
+          http:
+            enabled: true
+            port: 80
+    persistence:
+      headscale-config:
+        type: secret
+        name: headscale-config
+        advancedMounts:
+          main:
+            - path: /etc/headscale/config.yaml
+              readOnly: true
+              subPath: config.yaml
+            - path: /etc/headscale/acl.yaml
+              readOnly: true
+              subPath: acl.yaml
+      tls-secrets:
+        type: secret
+        name: tls-secrets
+        advancedMounts:
+          main:
+            - path: /etc/headscale/tls.crt
+              readOnly: true
+              subPath: tls.crt
+            - path: /etc/headscale/tls.key
+              readOnly: true
+              subPath: tls.key
+            - path: /etc/headscale/ca.crt
+              readOnly: true
+              subPath: ca.crt

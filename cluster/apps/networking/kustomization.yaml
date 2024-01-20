@@ -4,5 +4,6 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./gateway-api/ks.yaml
+  - ./headscale/ks.yaml
   - ./istio-system
   - ./unifi-controller/ks.yaml

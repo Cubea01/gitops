@@ -1,0 +1,56 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-world-to-headscale"
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: headscale
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "3478"
+              protocol: UDP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-gateway-to-headscale-ui"
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: headscale
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            istio.io/gateway-name: headscale-gateway
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-world-to-headscale-gateway"
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      istio.io/gateway-name: headscale-gateway
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP
