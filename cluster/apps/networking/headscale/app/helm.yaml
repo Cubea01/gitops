@@ -44,6 +44,7 @@ spec:
               PUID: 1000
               PGID: 1000
               TZ: America/Anchorage
+            args: ["headscale", "serve"]
             probes:
               liveness: &probes
                 enabled: true
@@ -89,19 +90,11 @@ spec:
                 memory: 500Mi
     service:
       main:
-        enabled: true
+        enabled: false
         ports:
           http:
             enabled: false
             port: 0
-          metrics:
-            enabled: true
-            port: 9090
-            protocol: TCP
-          grpc:
-            enabled: true
-            port: 50443
-            protocol: TCP
       lb:
         enabled: true
         primary: true
@@ -117,11 +110,28 @@ spec:
             enabled: true
             port: 3478
             protocol: UDP
-          headscale:
+          headscale-port:
             enabled: true
             port: 443
             protocol: TCP
-      headscale-ui:
+            targetPort: 8080
+      internal:
+        enabled: true
+        primary: false
+        controller: main
+        ports:
+          http:
+            enabled: false
+            port: 80
+          metrics:
+            enabled: true
+            port: 9090
+            protocol: TCP
+          grpc:
+            enabled: true
+            port: 50443
+            protocol: TCP
+      ui:
         enabled: true
         primary: false
         controller: main
@@ -130,7 +140,28 @@ spec:
             enabled: true
             port: 80
     persistence:
-      headscale-config:
+      root-ca:
+        type: configMap
+        name: istio-ca-root-cert
+        advancedMounts:
+          main:
+            main:
+              - path: /usr/lib/ssl/certs/root-ca.crt
+                readOnly: true
+                subPath: root-cert.pem
+      config-folder:
+        enabled: true
+        type: persistentVolumeClaim
+        storageClass: nfs-csi
+        accessMode: ReadWriteOnce
+        size: 1Gi
+        retain: true
+        advancedMounts:
+          main:
+            main:
+              - path: /etc/headscale
+                readOnly: false
+      secrets:
         type: secret
         name: headscale-config
         advancedMounts:
