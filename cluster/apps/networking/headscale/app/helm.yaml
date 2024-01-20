@@ -135,23 +135,25 @@ spec:
         name: headscale-config
         advancedMounts:
           main:
-            - path: /etc/headscale/config.yaml
-              readOnly: true
-              subPath: config.yaml
-            - path: /etc/headscale/acl.yaml
-              readOnly: true
-              subPath: acl.yaml
+            main:
+              - path: /etc/headscale/config.yaml
+                readOnly: true
+                subPath: config.yaml
+              - path: /etc/headscale/acl.yaml
+                readOnly: true
+                subPath: acl.yaml
       tls-secrets:
         type: secret
         name: tls-secrets
         advancedMounts:
           main:
-            - path: /etc/headscale/tls.crt
-              readOnly: true
-              subPath: tls.crt
-            - path: /etc/headscale/tls.key
-              readOnly: true
-              subPath: tls.key
-            - path: /etc/headscale/ca.crt
-              readOnly: true
-              subPath: ca.crt
+            main:
+              - path: /etc/headscale/tls.crt
+                readOnly: true
+                subPath: tls.crt
+              - path: /etc/headscale/tls.key
+                readOnly: true
+                subPath: tls.key
+              - path: /etc/headscale/ca.crt
+                readOnly: true
+                subPath: ca.crt
