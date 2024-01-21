@@ -2,7 +2,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "allow-istio-to-authentik"
+  name: "allow-gateway-to-authentik"
   namespace: authentik
 spec:
   endpointSelector:
