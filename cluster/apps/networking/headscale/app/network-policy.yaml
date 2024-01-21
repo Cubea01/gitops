@@ -32,27 +32,9 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            istio.io/gateway-name: headscale-gateway
+            istio.io/gateway-name: internal-gateway
+            k8s:io.kubernetes.pod.namespace: istio-system
       toPorts:
         - ports:
             - port: "80"
-              protocol: TCP
----
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: "allow-world-to-headscale-gateway"
-  namespace: headscale
-spec:
-  endpointSelector:
-    matchLabels:
-      istio.io/gateway-name: headscale-gateway
-  ingress:
-    - fromEntities:
-        - world
-      toPorts:
-        - ports:
-            - port: "80"
-              protocol: TCP
-            - port: "443"
               protocol: TCP

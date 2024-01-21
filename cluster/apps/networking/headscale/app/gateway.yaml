@@ -1,31 +1,3 @@
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: Gateway
-metadata:
-  name: headscale-gateway
-  namespace: headscale
-  annotations:
-    io.cilium/lb-ipam-ips: 10.0.0.10
-spec:
-  gatewayClassName: istio
-  listeners:
-    - name: https
-      hostname: headscale-ui.akchristiansen.com
-      port: 443
-      protocol: HTTPS
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: tls-secrets
-      allowedRoutes:
-        namespaces:
-          from: Same
-    - name: http
-      hostname: headscale-ui.akchristiansen.com
-      port: 80
-      protocol: HTTP
-      allowedRoutes:
-        namespaces:
-          from: Same
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
@@ -34,7 +6,8 @@ metadata:
   namespace: headscale
 spec:
   parentRefs:
-    - name: headscale-gateway
+    - name: internal-gateway
+      namespace: istio-system
       sectionName: https
   hostnames: ["headscale-ui.akchristiansen.com"]
   rules:
@@ -53,7 +26,8 @@ metadata:
   namespace: headscale
 spec:
   parentRefs:
-    - name: headscale-gateway
+    - name: internal-gateway
+      namespace: istio-system
       sectionName: http
   hostnames: ["headscale-ui.akchristiansen.com"]
   rules:
