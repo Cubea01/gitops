@@ -12,6 +12,7 @@ spec:
     - fromEndpoints:
         - matchLabels:
             istio.io/gateway-name: external-gateway
+            k8s:io.kubernetes.pod.namespace: istio-system
       toPorts:
         - ports:
             - port: '80'
