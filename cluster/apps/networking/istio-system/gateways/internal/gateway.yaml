@@ -18,6 +18,9 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: akchristiansen-com-tls
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: http
       port: 80
       protocol: HTTP

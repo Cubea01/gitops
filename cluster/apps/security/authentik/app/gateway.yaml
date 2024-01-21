@@ -4,11 +4,10 @@ kind: HTTPRoute
 metadata:
   name: https
   namespace: authentik
-  labels:
-    gateway: external
 spec:
   parentRefs:
     - name: external-gateway
+      namespace: istio-system
       sectionName: https
   hostnames: ["auth.akchristiansen.com"]
   rules:
@@ -25,11 +24,10 @@ kind: HTTPRoute
 metadata:
   name: http-filter-redirect
   namespace: authentik
-  labels:
-    gateway: external
 spec:
   parentRefs:
     - name: external-gateway
+      namespace: istio-system
       sectionName: http
   hostnames: ["auth.akchristiansen.com"]
   rules:
