@@ -11,7 +11,6 @@ spec:
     - name: cluster-apps-security-external-secrets-stores
     - name: cluster-apps-security-cert-manager
     - name: cluster-apps-networking-istio-system-istiod
-    - name: cluster-apps-networking-istio-system-issuers
   prune: true
   sourceRef:
     kind: GitRepository
