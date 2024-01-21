@@ -3,6 +3,6 @@ kind: Kustomization
 resources:
   # renovate: datasource=github-releases depName=kubernetes-sigs/gateway-api
   - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/experimental-install.yaml
-  - ./network-policy.yaml
-patchesStrategicMerge:
-  - ./namespace.yaml
+#   - ./network-policy.yaml
+# patchesStrategicMerge:
+#   - ./namespace.yaml
