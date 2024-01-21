@@ -13,9 +13,9 @@ spec:
       - dns01:
           cloudflare:
             email: gage@gageserver.com
-            apiKeySecretRef:
+            apiTokenSecretRef:
               name: cloudflare-secret
-              key: CLOUDFLARE_API_KEY
+              key: CLOUDFLARE_API_TOKEN
         selector:
           dnsZones:
             - akchristiansen.com
