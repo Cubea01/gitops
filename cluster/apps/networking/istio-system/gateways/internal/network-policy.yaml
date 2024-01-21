@@ -2,19 +2,18 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "allow-istio-to-authentik"
-  namespace: authentik
+  name: "allow-world-to-internal"
+  namespace: istio-system
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: authentik
+      istio.io/gateway-name: internal-gateway
   ingress:
-    - fromEndpoints:
-        - matchLabels:
-            istio.io/gateway-name: external-gateway
+    - fromEntities:
+        - all
       toPorts:
         - ports:
             - port: '80'
               protocol: TCP
-            - port: '9000'
+            - port: '443'
               protocol: TCP
