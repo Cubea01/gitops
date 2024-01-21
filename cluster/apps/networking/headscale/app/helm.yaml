@@ -175,7 +175,7 @@ spec:
                 subPath: acl.yaml
       tls-secrets:
         type: secret
-        name: tls-secrets
+        name: headscale-akchristiansen-com-tls
         advancedMounts:
           main:
             main:
