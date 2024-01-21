@@ -4,8 +4,6 @@ kind: HTTPRoute
 metadata:
   name: https
   namespace: authentik
-  annotations:
-    external-dns.alpha.kubernetes.io/target: external.akchristiansen.com
   labels:
     gateway: external
 spec:
@@ -27,8 +25,6 @@ kind: HTTPRoute
 metadata:
   name: http-filter-redirect
   namespace: authentik
-  annotations:
-    external-dns.alpha.kubernetes.io/target: external.akchristiansen.com
   labels:
     gateway: external
 spec:

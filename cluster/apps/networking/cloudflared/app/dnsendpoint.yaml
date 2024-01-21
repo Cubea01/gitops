@@ -4,6 +4,8 @@ kind: DNSEndpoint
 metadata:
   name: cloudflared
   namespace: cloudflared
+  labels:
+    gateway: external
 spec:
   endpoints:
     - dnsName: external.akchristiansen.com
