@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./base/ks.yaml
+  - ./gateways/ks.yaml
   - ./cni/ks.yaml
   - ./issuers/ks.yaml
   - ./istiod/ks.yaml
