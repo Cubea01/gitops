@@ -4,4 +4,4 @@ kind: Namespace
 metadata:
   name: external-dns
   labels:
-    istio-injection: enabled
+    istio-injection: disabled
