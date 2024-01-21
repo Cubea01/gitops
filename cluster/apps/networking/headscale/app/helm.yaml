@@ -52,7 +52,7 @@ spec:
                 spec:
                   tcpSocket:
                     port: 8080
-                  initialDelaySeconds: 5
+                  initialDelaySeconds: 10
                   periodSeconds: 2
                   timeoutSeconds: 1
                   failureThreshold: 20
@@ -68,39 +68,11 @@ spec:
                 memory: 1000Mi
     service:
       main:
-        enabled: false
-        ports:
-          http:
-            enabled: false
-            port: 0
-      lb:
         enabled: true
-        primary: true
-        type: LoadBalancer
-        controller: main
-        annotations:
-          "io.cilium/lb-ipam-ips": "10.0.0.9"
         ports:
           http:
-            enabled: false
-            port: 80
-          derp:
             enabled: true
-            port: 3478
-            protocol: UDP
-          headscale-port:
-            enabled: true
-            port: 443
-            protocol: TCP
-            targetPort: 8080
-      internal:
-        enabled: true
-        primary: false
-        controller: main
-        ports:
-          http:
-            enabled: false
-            port: 80
+            port: 8080
           metrics:
             enabled: true
             port: 9090
@@ -109,22 +81,23 @@ spec:
             enabled: true
             port: 50443
             protocol: TCP
-    persistence:
-      config-folder:
+      lb:
         enabled: true
-        type: persistentVolumeClaim
-        storageClass: nfs-csi
-        accessMode: ReadWriteOnce
-        size: 1Gi
-        retain: true
-        advancedMounts:
-          main:
-            main:
-              - path: /etc/headscale
-                readOnly: false
+        type: LoadBalancer
+        controller: main
+        annotations:
+          "io.cilium/lb-ipam-ips": "10.0.0.9"
+        ports:
+          http:
+            enabled: false
+          derp:
+            enabled: true
+            port: 3478
+            protocol: UDP
+    persistence:
       secrets:
         type: secret
-        name: headscale-config
+        name: headscale-secrets
         advancedMounts:
           main:
             main:
@@ -134,15 +107,9 @@ spec:
               - path: /etc/headscale/acl.yaml
                 readOnly: true
                 subPath: acl.yaml
-      tls-secrets:
-        type: secret
-        name: headscale-akchristiansen-com-tls
-        advancedMounts:
-          main:
-            main:
-              - path: /etc/headscale/tls.crt
+              - path: /etc/headscale/noise_private.key
                 readOnly: true
-                subPath: tls.crt
-              - path: /etc/headscale/tls.key
+                subPath: noise_private.key
+              - path: /etc/headscale/private.key
                 readOnly: true
-                subPath: tls.key
+                subPath: private.key

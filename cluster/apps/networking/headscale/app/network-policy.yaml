@@ -2,7 +2,7 @@
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "allow-world-to-headscale"
+  name: "allow-world-to-headscale-derp"
   namespace: headscale
 spec:
   endpointSelector:
@@ -13,9 +13,24 @@ spec:
         - world
       toPorts:
         - ports:
-            - port: "443"
-              protocol: TCP
-            - port: "8080"
-              protocol: TCP
             - port: "3478"
               protocol: UDP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-gateway-to-headscale"
+  namespace: headscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: headscale
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            istio.io/gateway-name: external-gateway
+            k8s:io.kubernetes.pod.namespace: istio-system
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
