@@ -30,13 +30,12 @@ data:
             10.0.0.3 vault.akchristiansen.com
             10.0.0.4 external.akchristiansen.com
             10.0.0.4 auth.akchristiansen.com
+            10.0.0.4 headscale.akchristiansen.com
             10.0.0.5 internal.akchristiansen.com
             10.0.0.5 k10.akchristiansen.com
-            10.0.0.5 headscale-ui.akchristiansen.com
             10.0.0.6 unifi.akchristiansen.com
             10.0.0.7 mc.gageserver.com
             10.0.0.8 k10.akchristiansen.com
-            10.0.0.9 headscale.akchristiansen.com
             ttl 3600
             reload 0
             no_reverse
