@@ -175,7 +175,7 @@ spec:
                 subPath: MONGO_INIT_SCRIPT
       tls-secrets:
         type: secret
-        name: tls-secrets
+        name: unifi-akchristiansen-com-tls
         advancedMounts:
           main:
             unifi-ssl:
