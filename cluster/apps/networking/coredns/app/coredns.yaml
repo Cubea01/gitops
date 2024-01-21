@@ -35,7 +35,7 @@ data:
             10.0.0.5 k10.akchristiansen.com
             10.0.0.6 unifi.akchristiansen.com
             10.0.0.7 mc.gageserver.com
-            10.0.0.8 k10.akchristiansen.com
+            10.0.0.8 headscale-derp.akchristiansen.com
             ttl 3600
             reload 0
             no_reverse
