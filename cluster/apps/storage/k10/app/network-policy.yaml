@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-gateway-to-k10"
+  namespace: kasten-io
+spec:
+  endpointSelector:
+    matchLabels:
+      service: gateway
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            istio.io/gateway-name: internal-gateway
+            k8s:io.kubernetes.pod.namespace: istio-system
+      toPorts:
+        - ports:
+            - port: '8000'
+              protocol: TCP
