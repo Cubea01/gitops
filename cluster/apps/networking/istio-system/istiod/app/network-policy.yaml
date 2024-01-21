@@ -11,6 +11,8 @@ spec:
   ingress:
     - fromEntities:
         - cluster
+        - host
+        - kube-apiserver
       toPorts:
         - ports:
             - port: '15012'
