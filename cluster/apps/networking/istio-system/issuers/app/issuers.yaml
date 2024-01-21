@@ -1,0 +1,76 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: gage@gageserver.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - dns01:
+          cloudflare:
+            email: gage@gageserver.com
+            apiKeySecretRef:
+              name: cloudflare-secret
+              key: CLOUDFLARE_API_KEY
+        selector:
+          dnsZones:
+            - akchristiansen.com
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: gage@gageserver.com
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - dns01:
+          cloudflare:
+            email: gage@gageserver.com
+            apiKeySecretRef:
+              name: cloudflare-secret
+              key: CLOUDFLARE_API_KEY
+        selector:
+          dnsZones:
+            - akchristiansen.com
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: istio-issuer
+spec:
+  vault:
+    path: pki/sign/istio-role
+    server: https://vault-active.vault.svc.cluster.local:8200
+    caBundle: ${ca_bundle_base64}
+    auth:
+      appRole:
+        path: approle
+        roleId: "${istio_issuer_roleid}"
+        secretRef:
+          name: istio-issuer-approle
+          key: secretId
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: ingress-issuer
+spec:
+  vault:
+    path: pki/sign/ingress-role
+    server: https://vault-active.vault.svc.cluster.local:8200
+    caBundle: ${ca_bundle_base64}
+    auth:
+      appRole:
+        path: approle
+        roleId: ${ingress_issuer_roleid}
+        secretRef:
+          name: ingress-issuer-approle
+          key: secretId
