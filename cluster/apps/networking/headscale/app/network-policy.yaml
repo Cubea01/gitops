@@ -19,22 +19,3 @@ spec:
               protocol: TCP
             - port: "3478"
               protocol: UDP
----
-apiVersion: "cilium.io/v2"
-kind: CiliumNetworkPolicy
-metadata:
-  name: "allow-gateway-to-headscale-ui"
-  namespace: headscale
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/name: headscale
-  ingress:
-    - fromEndpoints:
-        - matchLabels:
-            istio.io/gateway-name: internal-gateway
-            k8s:io.kubernetes.pod.namespace: istio-system
-      toPorts:
-        - ports:
-            - port: "80"
-              protocol: TCP

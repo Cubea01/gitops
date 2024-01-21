@@ -61,33 +61,11 @@ spec:
                 enabled: false
             resources:
               requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
                 cpu: 1
-                memory: 1500Mi
-          headscale-ui:
-            dependsOn:
-              - main
-            image:
-              repository: ghcr.io/gurucomputing/headscale-ui
-              tag: 2023.01.30-beta-1
-              pullPolicy: IfNotPresent
-            probes:
-              liveness: &uiprobes
-                enabled: true
-                custom: true
-                spec:
-                  tcpSocket:
-                    port: 80
-                  initialDelaySeconds: 5
-                  periodSeconds: 2
-                  timeoutSeconds: 1
-                  failureThreshold: 20
-              readiness: *uiprobes
-              startup:
-                enabled: false
-            resources:
-              requests:
-                cpu: 500m
-                memory: 500Mi
+                memory: 1000Mi
     service:
       main:
         enabled: false
@@ -131,14 +109,6 @@ spec:
             enabled: true
             port: 50443
             protocol: TCP
-      ui:
-        enabled: true
-        primary: false
-        controller: main
-        ports:
-          http:
-            enabled: true
-            port: 80
     persistence:
       config-folder:
         enabled: true
