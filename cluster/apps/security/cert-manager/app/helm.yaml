@@ -26,6 +26,8 @@ spec:
     installCRDs: true
     enableCertificateOwnerRef: true
     featureGates: "ExperimentalGatewayAPISupport=true,ExperimentalCertificateSigningRequestControllers=true"
+    extraArgs:
+      - "--dns01-recursive-nameservers= 1.1.1.1:53"
     replicaCount: 3
     podDisruptionBudget:
       enabled: true
