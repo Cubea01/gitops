@@ -140,15 +140,6 @@ spec:
             enabled: true
             port: 80
     persistence:
-      root-ca:
-        type: configMap
-        name: istio-ca-root-cert
-        advancedMounts:
-          main:
-            main:
-              - path: /usr/lib/ssl/certs/root-ca.crt
-                readOnly: true
-                subPath: root-cert.pem
       config-folder:
         enabled: true
         type: persistentVolumeClaim
@@ -185,6 +176,3 @@ spec:
               - path: /etc/headscale/tls.key
                 readOnly: true
                 subPath: tls.key
-              - path: /etc/headscale/ca.crt
-                readOnly: true
-                subPath: ca.crt

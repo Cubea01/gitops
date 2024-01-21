@@ -105,7 +105,7 @@ spec:
               [
                 "sh",
                 "-c",
-                "mkdir -p /config/data /config/logs && rm -f /config/data/keystore && keytool -import -alias ca -file /usr/lib/unifi/tls/ca.crt -keystore /config/data/keystore -storepass aircontrolenterprise -noprompt && openssl pkcs12 -export -in /usr/lib/unifi/tls/tls.crt -inkey /usr/lib/unifi/tls/tls.key -out /tmp/unifi.p12 -name unifi -passout pass:aircontrolenterprise && keytool -importkeystore -srckeystore /tmp/unifi.p12 -srcstoretype PKCS12 -srcstorepass aircontrolenterprise -destkeystore /config/data/keystore -deststorepass aircontrolenterprise -noprompt && rm /tmp/unifi.p12",
+                "mkdir -p /config/data /config/logs && rm -f /config/data/keystore && openssl pkcs12 -export -in /usr/lib/unifi/tls/tls.crt -inkey /usr/lib/unifi/tls/tls.key -out /tmp/unifi.p12 -name unifi -passout pass:aircontrolenterprise && keytool -importkeystore -srckeystore /tmp/unifi.p12 -srcstoretype PKCS12 -srcstorepass aircontrolenterprise -destkeystore /config/data/keystore -deststorepass aircontrolenterprise -noprompt && rm /tmp/unifi.p12",
               ]
     service:
       main:
@@ -185,6 +185,3 @@ spec:
               - path: /usr/lib/unifi/tls/tls.key
                 readOnly: true
                 subPath: tls.key
-              - path: /usr/lib/unifi/tls/ca.crt
-                readOnly: true
-                subPath: ca.crt
