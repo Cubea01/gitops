@@ -39,8 +39,6 @@ spec:
                   name: external-dns-cloudflare-secret
             args:
               - --cloudflare-proxied
-              - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
-              - --crd-source-kind=DNSEndpoint
               - --domain-filter=akchristiansen.com
               - --interval=1m
               - --log-format=text
@@ -49,7 +47,6 @@ spec:
               - --policy=sync
               - --provider=cloudflare
               - --registry=txt
-              - --source=crd
               - --source=gateway-httproute
               - --gateway-label-filter=gateway==external
               - --txt-owner-id=default
