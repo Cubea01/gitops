@@ -51,7 +51,7 @@ spec:
               - --registry=txt
               - --source=crd
               - --source=gateway-httproute
-              - --gateway-label-filter=gateway==external
+              - --label-filter=gateway==external
               - --txt-owner-id=default
               - --txt-prefix=k8s.
             probes:
