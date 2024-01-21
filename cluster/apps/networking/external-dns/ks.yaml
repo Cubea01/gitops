@@ -10,6 +10,7 @@ spec:
   dependsOn:
     - name: cluster-apps-security-external-secrets-stores
     - name: cluster-apps-networking-istio-system-istiod
+    - name: cluster-apps-networking-gateway-api
   prune: true
   sourceRef:
     kind: GitRepository
