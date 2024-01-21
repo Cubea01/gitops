@@ -9,12 +9,12 @@ data:
       http2Origin: true
 
     ingress:
-      - hostname: devbu.io
-        service: https://nginx-external-controller.network.svc.cluster.local:443
+      - hostname: akchristiansen.com
+        service: https://external-gateway-istio.istio-system.svc.cluster.local
         originRequest:
-          originServerName: external.devbu.io
-      - hostname: "*.devbu.io"
-        service: https://nginx-external-controller.network.svc.cluster.local:443
+          originServerName: external.akchristiansen.com
+      - hostname: "*.akchristiansen.com"
+        service: https://external-gateway-istio.istio-system.svc.cluster.local
         originRequest:
-          originServerName: external.devbu.io
+          originServerName: external.akchristiansen.com
       - service: http_status:404

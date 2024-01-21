@@ -9,6 +9,7 @@ spec:
   path: ./cluster/apps/networking/cloudflared/app
   dependsOn:
     - name: cluster-apps-security-external-secrets-stores
+    - name: cluster-apps-networking-external-dns
     - name: cluster-apps-networking-istio-system-istiod
   prune: true
   sourceRef:

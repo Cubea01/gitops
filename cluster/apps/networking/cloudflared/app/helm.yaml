@@ -47,7 +47,7 @@ spec:
               - --config
               - /etc/cloudflared/config/config.yaml
               - run
-              - "${CLUSTER_CLOUDFLARE_TUNNEL_ID}"
+              - "95b61444-7558-4a8f-b269-d68beb05d2c3"
             probes:
               liveness: &probes
                 enabled: true
