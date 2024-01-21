@@ -20,8 +20,8 @@ spec:
         certificateRefs:
           - name: akchristiansen-com-tls
       allowedRoutes:
-      namespaces:
-        from: All
+        namespaces:
+          from: All
     - name: http
       port: 80
       protocol: HTTP
