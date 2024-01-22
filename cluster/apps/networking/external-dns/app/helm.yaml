@@ -38,7 +38,7 @@ spec:
               - secretRef:
                   name: external-dns-cloudflare-secret
             args:
-              - --cloudflare-proxied
+              # - --cloudflare-proxied
               - --domain-filter=akchristiansen.com
               - --interval=1m
               - --log-format=text
