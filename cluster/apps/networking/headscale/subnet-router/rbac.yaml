@@ -1,0 +1,29 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: subnet-router
+  namespace: headscale
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["secrets"]
+    # Create can not be restricted to a resource name.
+    verbs: ["create"]
+  - apiGroups: [""] # "" indicates the core API group
+    resourceNames: ["subnet-router-secret"]
+    resources: ["secrets"]
+    verbs: ["get", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: subnet-router
+  namespace: headscale
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: subnet-router
+subjects:
+  - kind: ServiceAccount
+    name: subnet-router
+    namespace: headscale
