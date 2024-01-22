@@ -28,6 +28,7 @@ spec:
     defaultPodOptions:
       labels:
         sidecar.istio.io/inject: "false"
+      hostNetwork: true
     controllers:
       main:
         containers:
