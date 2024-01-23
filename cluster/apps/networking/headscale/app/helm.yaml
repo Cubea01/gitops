@@ -108,6 +108,9 @@ spec:
               - path: /etc/headscale/acl.yaml
                 readOnly: true
                 subPath: acl.yaml
+              - path: /etc/headscale/derp.yaml
+                readOnly: true
+                subPath: derp.yaml
               - path: /etc/headscale/noise_private.key
                 readOnly: true
                 subPath: noise_private.key
