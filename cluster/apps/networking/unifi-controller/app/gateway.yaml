@@ -5,7 +5,6 @@ metadata:
   namespace: unifi-controller
   annotations:
     io.cilium/lb-ipam-ips: 10.0.0.6
-    external-dns.alpha.kubernetes.io/hostname: unifi.akchristiansen.com
 spec:
   gatewayClassName: istio
   listeners:
@@ -53,6 +52,7 @@ metadata:
   name: https-admin
   namespace: unifi-controller
 spec:
+  hostnames: ["unifi.akchristiansen.com"]
   parentRefs:
     - name: unifi-gateway
       sectionName: https-admin
@@ -67,6 +67,7 @@ metadata:
   name: http-filter-redirect
   namespace: unifi-controller
 spec:
+  hostnames: ["unifi.akchristiansen.com"]
   parentRefs:
     - name: unifi-gateway
       sectionName: http-admin
@@ -83,6 +84,7 @@ metadata:
   name: https-guest
   namespace: unifi-controller
 spec:
+  hostnames: ["unifi.akchristiansen.com"]
   parentRefs:
     - name: unifi-gateway
       sectionName: https-guest
@@ -97,6 +99,7 @@ metadata:
   name: http-guest
   namespace: unifi-controller
 spec:
+  hostnames: ["unifi.akchristiansen.com"]
   parentRefs:
     - name: unifi-gateway
       sectionName: http-guest
