@@ -39,7 +39,3 @@ data:
     #     reload
     #     loadbalance
     # }
-    k8s_gateway akchristiansen.com {
-        resources HTTPRoute TLSRoute Service
-        ttl 3600
-    }
