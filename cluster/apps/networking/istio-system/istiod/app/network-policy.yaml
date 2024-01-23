@@ -15,8 +15,11 @@ spec:
         - kube-apiserver
       toPorts:
         - ports:
+            - port: '15010'
+              protocol: TCP
             - port: '15012'
               protocol: TCP
-        - ports:
-            - port: '443'
+            - port: '15014'
+              protocol: TCP
+            - port: '15017'
               protocol: TCP
