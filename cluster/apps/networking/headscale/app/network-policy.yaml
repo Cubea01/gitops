@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: headscale
   ingress:
     - fromEntities:
-        - world
+        - all
       toPorts:
         - ports:
             - port: "3478"
