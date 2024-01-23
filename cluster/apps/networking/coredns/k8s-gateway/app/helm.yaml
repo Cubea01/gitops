@@ -1,0 +1,34 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: k8s-gateway
+  namespace: kube-system
+  annotations:
+    meta.helm.sh/release-name: k8s-gateway
+    meta.helm.sh/release-namespace: kube-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: k8s-gateway
+      version: 2.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: k8s-gateway
+        namespace: flux-system
+      interval: 5m
+  values:
+    replicaCount: 3
+    domain: "akchristiansen.com"
+    watchedResources: [HTTPRoute TLSRoute Service]
+    fallthrough:
+      enabled: false
+      zones: []
+    service:
+      type: LoadBalancer
+      port: 53
+      annotations:
+        io.cilium/lb-ipam-ips: 10.0.0.3
