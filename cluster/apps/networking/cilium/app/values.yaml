@@ -27,7 +27,7 @@ rollOutCiliumPods: true
 localRedirectPolicy: true
 
 enableIPv4Masquerade: false
-tunnel: "disabled"
+routingMode: "native"
 
 autoDirectNodeRoutes: true
 ipv4NativeRoutingCIDR: 10.0.0.0/8
@@ -57,7 +57,7 @@ policyEnforcementMode: "always"
 policyAuditMode: false
 
 encryption:
-  enabled: true
+  enabled: false
   type: wireguard
 
 securityContext:
