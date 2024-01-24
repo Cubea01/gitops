@@ -5,3 +5,5 @@ metadata:
   labels:
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/warn: baseline
+  annotations:
+    lbipam.cilium.io/sharing-cross-namespace: headscale

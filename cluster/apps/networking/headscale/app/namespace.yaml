@@ -4,3 +4,5 @@ metadata:
   name: headscale
   labels:
     istio-injection: enabled
+  annotations:
+    lbipam.cilium.io/sharing-cross-namespace: istio-system
