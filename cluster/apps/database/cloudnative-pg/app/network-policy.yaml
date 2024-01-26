@@ -63,7 +63,7 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: headscale
+            k8s:io.kubernetes.pod.namespace: istio-system
             app.kubernetes.io/name: headscale
       toPorts:
         - ports:
