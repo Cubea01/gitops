@@ -117,7 +117,7 @@ spec:
             port: 3478
             protocol: UDP
     persistence:
-      emptyDir:
+      tailscaled:
         type: emptyDir
         globalMounts:
           - path: /var/run/tailscale/
