@@ -38,7 +38,7 @@ spec:
               tag: v1.56.1
               pullPolicy: IfNotPresent
             envFrom:
-              - secret: subnet-router-secret
+              - secret: k8s-tailscale-secret
             env:
               TS_KUBE_SECRET: subnet-router-state
               TS_USERSPACE: false
