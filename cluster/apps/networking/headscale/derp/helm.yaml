@@ -1,0 +1,126 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: derp
+  namespace: istio-system
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: true
+      securityContext:
+        privileged: true
+        capabilities:
+          add: ["CAP_NET_ADMIN", "CAP_NET_RAW"]
+    controllers:
+      main:
+        containers:
+          main:
+            dependsOn:
+              - tailscaled
+            image:
+              repository: fredliang/derper
+              tag: latest
+              pullPolicy: IfNotPresent
+            env:
+              PUID: 1000
+              PGID: 1000
+              TZ: America/Anchorage
+              DERP_DOMAIN: headscale-derp.akchristiansen.com
+              DERP_ADDR: :80
+              DERP_HTTP_PORT: 80
+              DERP_STUN: 'true'
+              DERP_VERIFY_CLIENTS: 'true'
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 80
+                  initialDelaySeconds: 10
+                  periodSeconds: 2
+                  timeoutSeconds: 1
+                  failureThreshold: 20
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
+                cpu: 1
+                memory: 1000Mi
+          tailscaled:
+            image:
+              repository: ghcr.io/tailscale/tailscale
+              tag: v1.56.1
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secret: k8s-tailscale-secret
+            env:
+              TS_KUBE_SECRET: ""
+              TS_USERSPACE: true
+              TS_HOSTNAME: derp
+              TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com --shields-up --accept-routes=false"
+            probes:
+              liveness: &probes
+                enabled: false
+              readiness: *probes
+              startup: *probes
+            resources:
+              requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
+                cpu: 1
+                memory: 1000Mi
+    service:
+      main:
+        enabled: true
+        ports:
+          http:
+            enabled: true
+            port: 80
+      lb:
+        enabled: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          io.cilium/lb-ipam-ips: 10.0.0.4
+          io.cilium/lb-ipam-sharing-key: 'external-gateway'
+        ports:
+          http:
+            enabled: false
+          derp:
+            enabled: true
+            port: 3478
+            protocol: UDP
+    persistence:
+      emptyDir:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run/tailscale/
+      wireguard-tun:
+        type: hostPath
+        hostPath: /dev/net/tun
