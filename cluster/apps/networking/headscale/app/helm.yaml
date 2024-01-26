@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: headscale
-  namespace: istio-system
+  namespace: headscale
 spec:
   interval: 15m
   chart:
@@ -81,20 +81,6 @@ spec:
             enabled: true
             port: 50443
             protocol: TCP
-      lb:
-        enabled: true
-        type: LoadBalancer
-        controller: main
-        annotations:
-          io.cilium/lb-ipam-ips: 10.0.0.4
-          io.cilium/lb-ipam-sharing-key: 'external-gateway'
-        ports:
-          http:
-            enabled: false
-          derp:
-            enabled: true
-            port: 3478
-            protocol: UDP
     persistence:
       secrets:
         type: secret
