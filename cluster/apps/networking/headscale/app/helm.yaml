@@ -3,7 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: headscale
-  namespace: headscale
+  namespace: istio-system
 spec:
   interval: 15m
   chart:
@@ -86,9 +86,8 @@ spec:
         type: LoadBalancer
         controller: main
         annotations:
-          lbipam.cilium.io/ips: 10.0.0.4
-          lbipam.cilium.io/sharing-key: 'external-gateway'
-          lbipam.cilium.io/sharing-cross-namespace: istio-system,headscale
+          io.cilium/lb-ipam-ips: 10.0.0.4
+          io.cilium/lb-ipam-sharing-key: 'external-gateway'
         ports:
           http:
             enabled: false

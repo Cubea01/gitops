@@ -3,7 +3,7 @@ apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
   name: "allow-world-to-headscale-derp"
-  namespace: headscale
+  namespace: istio-system
 spec:
   endpointSelector:
     matchLabels:
@@ -20,7 +20,7 @@ apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
   name: "allow-gateway-to-headscale"
-  namespace: headscale
+  namespace: istio-system
 spec:
   endpointSelector:
     matchLabels:
