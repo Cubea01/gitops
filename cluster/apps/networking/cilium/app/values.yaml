@@ -37,6 +37,9 @@ pmtuDiscovery:
 
 l7Proxy: false
 
+socketLB:
+  hostNamespaceOnly: true
+
 loadBalancer:
   algorithm: maglev
   mode: dsr
