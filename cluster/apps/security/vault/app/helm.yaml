@@ -37,11 +37,11 @@ spec:
         enabled: false
       resources:
         requests:
-          memory: 8Gi
-          cpu: 2000m
+          memory: 500Mi
+          cpu: 500m
         limits:
-          memory: 16Gi
-          cpu: 2000m
+          memory: 1Gi
+          cpu: 1
       readinessProbe:
         enabled: true
         path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
