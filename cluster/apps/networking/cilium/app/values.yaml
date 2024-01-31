@@ -37,12 +37,6 @@ pmtuDiscovery:
 
 l7Proxy: false
 
-socketLB:
-  hostNamespaceOnly: true
-
-bpf:
-  lbExternalClusterIP: true
-
 loadBalancer:
   algorithm: maglev
   mode: dsr
