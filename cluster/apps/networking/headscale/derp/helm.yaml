@@ -74,7 +74,7 @@ spec:
           tailscaled:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.56.1
+              tag: v1.58.2
               pullPolicy: IfNotPresent
             envFrom:
               - secret: k8s-tailscale-secret
