@@ -8,7 +8,6 @@ spec:
   path: ./cluster/apps/media/nextcloud/app
   dependsOn:
     - name: cluster-apps-networking-istio-system-istiod
-    - name: cluster-apps-storage-csi-nfs
     - name: cluster-apps-database-cloudnative-pg-cluster
     - name: cluster-apps-database-redis
   prune: true
