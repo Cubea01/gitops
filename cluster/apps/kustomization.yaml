@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - ./database
   - ./gaming
-  # - ./media
+  - ./media
   - ./monitoring
   - ./networking
   - ./security

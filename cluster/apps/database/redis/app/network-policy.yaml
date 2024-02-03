@@ -17,3 +17,22 @@ spec:
         - ports:
             - port: '6379'
               protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-nextcloud-to-redis"
+  namespace: redis
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: nextcloud
+            app.kubernetes.io/name: nextcloud
+      toPorts:
+        - ports:
+            - port: '6379'
+              protocol: TCP

@@ -1,0 +1,19 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-gateway-to-nextcloud"
+  namespace: nextcloud
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            istio.io/gateway-name: external-gateway
+            k8s:io.kubernetes.pod.namespace: istio-system
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP

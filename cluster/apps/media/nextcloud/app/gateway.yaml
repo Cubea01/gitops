@@ -1,0 +1,38 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: https
+  namespace: nextcloud
+spec:
+  parentRefs:
+    - name: external-gateway
+      namespace: istio-system
+      sectionName: https
+  hostnames: ["cloud.akchristiansen.com"]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: nextcloud
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-filter-redirect
+  namespace: nextcloud
+spec:
+  parentRefs:
+    - name: external-gateway
+      namespace: istio-system
+      sectionName: http
+  hostnames: ["cloud.akchristiansen.com"]
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
