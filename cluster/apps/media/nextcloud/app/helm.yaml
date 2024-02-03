@@ -89,7 +89,7 @@ spec:
     hpa:
       enabled: true
       cputhreshold: 60
-      minPods: 2
+      minPods: 1
       maxPods: 6
     livenessProbe:
       enabled: true
