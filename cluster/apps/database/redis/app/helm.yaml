@@ -22,4 +22,5 @@ spec:
       sentinel: false
     master:
       persistence:
-        storageClass: "nfs-csi"
+        storageClass: "iscsi-csi"
+        size: 50Gi
