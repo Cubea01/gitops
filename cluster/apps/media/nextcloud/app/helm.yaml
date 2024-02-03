@@ -81,7 +81,7 @@ spec:
         passwordKey: db-password
     resources:
       limits:
-        cpu: 1
+        cpu: 4
         memory: 2000Mi
       requests:
         cpu: 100m
