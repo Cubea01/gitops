@@ -32,6 +32,15 @@ spec:
         secretName: nextcloud-secrets
         usernameKey: nextcloud-username
         passwordKey: nextcloud-password
+      extraVolumes:
+        - name: nfs
+          nfs:
+            server: "10.0.6.2"
+            path: "/mnt/primary-pool/Cold-Storage"
+            readOnly: false
+      extraVolumeMounts:
+        - name: nfs
+          mountPath: "/Cold-Storage"
       defaultConfigs:
         redis.config.php: false
         apcu.config.php: false
@@ -65,15 +74,6 @@ spec:
     persistence:
       enabled: true
       existingClaim: nextcloud
-    extraVolumes:
-      - name: nfs
-        nfs:
-          server: "10.0.6.2"
-          path: "/mnt/primary-pool/Cold-Storage"
-          readOnly: false
-    extraVolumeMounts:
-      - name: nfs
-        mountPath: "/Cold-Storage"
     cronjob:
       enabled: true
     internalDatabase:
