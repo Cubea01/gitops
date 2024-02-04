@@ -65,6 +65,15 @@ spec:
     persistence:
       enabled: true
       existingClaim: nextcloud
+    extraVolumes:
+      - name: nfs
+        nfs:
+          server: "10.0.6.2"
+          path: "/mnt/primary-pool/Cold-Storage"
+          readOnly: false
+    extraVolumeMounts:
+      - name: nfs
+        mountPath: "/Cold-Storage"
     cronjob:
       enabled: true
     internalDatabase:
