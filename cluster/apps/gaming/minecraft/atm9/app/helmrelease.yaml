@@ -109,6 +109,7 @@ spec:
         enabled: true
         type: persistentVolumeClaim
         storageClass: iscsi-csi
+        accessMode: ReadWriteOnce
         retain: true
         size: 50Gi
         globalMounts:
