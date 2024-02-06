@@ -1,0 +1,17 @@
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-world-to-atm9"
+  namespace: minecraft
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: atm9
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: '25565'
+              protocol: TCP

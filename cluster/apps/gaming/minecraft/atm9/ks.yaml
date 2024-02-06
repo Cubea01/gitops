@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-gaming-minecraft-atm9
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cluster-apps-storage-csi-iscsi
+    - name: cluster-apps-security-external-secrets-store
+  path: ./cluster/apps/gaming/minecraft/atm9/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: github
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: atm9
+      namespace: minecraft
+  interval: 30m
+  retryInterval: 1m
+  timeout: 3m
