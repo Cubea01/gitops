@@ -15,9 +15,9 @@ spec:
     storageClass: "iscsi-csi"
   superuserSecret:
     name: cloudnative-pg-secret
-  # bootstrap:
-  #   recovery:
-  #     source: postgres-v4
+  bootstrap:
+    recovery:
+      source: postgres-v4
   postgresql:
     parameters:
       max_connections: "600"
@@ -38,7 +38,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgres-backups/
       endpointURL: https://nas-1.akchristiansen.com:9000
-      serverName: postgres-v4
+      serverName: postgres-v16
       endpointCA:
         name: cloudnative-pg-secret
         key: ca-bundle
@@ -49,21 +49,21 @@ spec:
         secretAccessKey:
           name: cloudnative-pg-secret
           key: minio-key
-  # externalClusters:
-  #   - name: postgres-v4
-  #     barmanObjectStore:
-  #       wal:
-  #         compression: bzip2
-  #         maxParallel: 8
-  #       destinationPath: s3://postgresql/
-  #       endpointURL: https://minio.minio-tenant.svc.cluster.local
-  #       endpointCA:
-  #         name: cloudnative-pg-secret
-  #         key: ca-bundle
-  #       s3Credentials:
-  #         accessKeyId:
-  #           name: cloudnative-pg-secret
-  #           key: minio-id
-  #         secretAccessKey:
-  #           name: cloudnative-pg-secret
-  #           key: minio-key
+  externalClusters:
+    - name: postgres-v4
+      barmanObjectStore:
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: s3://postgres-backups/
+        endpointURL: https://nas-1.akchristiansen.com:9000
+        endpointCA:
+          name: cloudnative-pg-secret
+          key: ca-bundle
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg-secret
+            key: minio-id
+          secretAccessKey:
+            name: cloudnative-pg-secret
+            key: minio-key
