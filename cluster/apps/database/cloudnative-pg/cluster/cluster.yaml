@@ -6,7 +6,7 @@ metadata:
   namespace: cloudnative-pg
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:14.9-3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-17
   postgresGID: 26
   postgresUID: 26
   primaryUpdateStrategy: unsupervised
@@ -21,7 +21,13 @@ spec:
   postgresql:
     parameters:
       max_connections: "600"
+      max_slot_wal_keep_size: 10GB
       shared_buffers: 512MB
+  resources:
+    requests:
+      cpu: 500m
+    limits:
+      memory: 4Gi
   monitoring:
     enablePodMonitor: false
   backup:
