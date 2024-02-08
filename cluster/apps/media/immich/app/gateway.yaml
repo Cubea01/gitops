@@ -1,0 +1,38 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: https
+  namespace: immich
+spec:
+  parentRefs:
+    - name: external-gateway
+      namespace: istio-system
+      sectionName: https
+  hostnames: ["photos.akchristiansen.com"]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: immich-server
+          port: 3001
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-filter-redirect
+  namespace: immich
+spec:
+  parentRefs:
+    - name: external-gateway
+      namespace: istio-system
+      sectionName: http
+  hostnames: ["photos.akchristiansen.com"]
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
