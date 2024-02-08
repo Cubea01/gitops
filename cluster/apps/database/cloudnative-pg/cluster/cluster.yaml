@@ -20,7 +20,10 @@ spec:
     recovery:
       source: postgres-v16
   postgresql:
+    shared_preload_libraries: 
+      - vectors.so
     parameters:
+      search_path: '"$user", public, vectors'
       max_connections: "600"
       max_slot_wal_keep_size: 10GB
       shared_buffers: 512MB
