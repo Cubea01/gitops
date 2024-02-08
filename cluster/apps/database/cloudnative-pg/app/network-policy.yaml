@@ -92,7 +92,7 @@ spec:
 apiVersion: "cilium.io/v2"
 kind: CiliumNetworkPolicy
 metadata:
-  name: "allow-immich-to-cloudnative-pg"
+  name: "allow-immich-server-to-cloudnative-pg"
   namespace: cloudnative-pg
 spec:
   endpointSelector:
@@ -102,7 +102,26 @@ spec:
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: immich
-            app.kubernetes.io/part-of: immich
+            app.kubernetes.io/name: immich-server
+      toPorts:
+        - ports:
+            - port: '5432'
+              protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-immich-microservices-to-cloudnative-pg"
+  namespace: cloudnative-pg
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: immich
+            app.kubernetes.io/name: immich-microservices
       toPorts:
         - ports:
             - port: '5432'
