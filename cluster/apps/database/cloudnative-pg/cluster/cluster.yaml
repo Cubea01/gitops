@@ -10,6 +10,7 @@ spec:
   postgresGID: 26
   postgresUID: 26
   primaryUpdateStrategy: unsupervised
+  enableSuperuserAccess: true
   storage:
     size: 100Gi
     storageClass: "iscsi-csi"
@@ -17,7 +18,7 @@ spec:
     name: cloudnative-pg-secret
   bootstrap:
     recovery:
-      source: postgres-v4
+      source: postgres-v16
   postgresql:
     parameters:
       max_connections: "600"
@@ -50,7 +51,7 @@ spec:
           name: cloudnative-pg-secret
           key: minio-key
   externalClusters:
-    - name: postgres-v4
+    - name: postgres-v16
       barmanObjectStore:
         wal:
           compression: bzip2
