@@ -13,6 +13,9 @@ spec:
         - kube-apiserver
         - host
         - remote-node
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: spegel
       toPorts:
         - ports:
             - port: '5000'
