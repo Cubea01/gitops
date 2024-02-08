@@ -39,7 +39,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgres-backups/
       endpointURL: https://nas-1.akchristiansen.com:9000
-      serverName: postgres-v16
+      serverName: postgres-v16.1-17
       endpointCA:
         name: cloudnative-pg-secret
         key: ca-bundle
