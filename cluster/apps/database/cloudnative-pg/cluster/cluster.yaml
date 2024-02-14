@@ -20,8 +20,8 @@ spec:
     recovery:
       source: postgres-v16
   postgresql:
-    shared_preload_libraries: 
-      - vectors.so
+    # shared_preload_libraries: 
+    #   - vectors.so
     parameters:
       # search_path: '"$user", public, vectors'
       max_connections: "600"
