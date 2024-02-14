@@ -1,0 +1,90 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: headscale-config
+  namespace: headscale
+spec:
+  refreshInterval: "15s"
+  secretStoreRef:
+    name: cluster-secrets
+    kind: ClusterSecretStore
+  target:
+    name: headscale-config
+    template:
+      engineVersion: v2
+      data:
+        config.yaml: |
+          ---
+          server_url: https://headscale.akchristiansen.com
+          listen_addr: 0.0.0.0:8080
+          metrics_listen_addr: 0.0.0.0:9090
+          grpc_listen_addr: 0.0.0.0:50443
+          grpc_allow_insecure: false
+
+          private_key_path: /etc/headscale/private.key
+
+          noise:
+            private_key_path: /etc/headscale/noise_private.key
+
+          unix_socket: /tmp/headscale.sock
+          unix_socket_permission: "0770"
+
+          ip_prefixes:
+            - 100.64.0.0/10
+
+          derp:
+            server:
+              enabled: false
+            urls:
+              - https://controlplane.tailscale.com/derpmap/default
+            auto_update_enabled: true
+            update_frequency: 24h
+
+          disable_check_updates: true
+          ephemeral_node_inactivity_timeout: 30m
+          node_update_check_interval: 10s
+
+          db_type: postgres
+          db_host: postgres-rw.cloudnative-pg.svc.cluster.local
+          db_port: 5432
+          db_name: headscale
+          db_user: headscale
+          db_pass: "{{ .db_pass }}"
+          db_ssl: false
+
+          log:
+            format: text
+            level: info
+
+          acl_policy_path: ""
+
+          dns_config:
+            override_local_dns: true
+            nameservers:
+              - 94.140.14.14
+              - 94.140.15.15
+            restricted_nameservers:
+              akchristiansen.com:
+                - 10.0.6.1
+            domains:
+              - akchristiansen.com
+            magic_dns: true
+            base_domain: akchristiansen.com
+
+          oidc:
+            only_start_if_oidc_is_available: true
+            issuer: "{{ .issuer }}"
+            client_id: "{{ .client_id }}"
+            client_secret: "{{ .client_secret }}"
+            expiry: 180d
+            use_expiry_from_token: false
+            scope: ["openid", "profile", "email"]
+
+          logtail:
+            enabled: false
+
+          randomize_client_port: false
+  dataFrom:
+    - extract:
+        key: headscale-secrets

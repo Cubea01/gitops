@@ -92,15 +92,21 @@ spec:
         globalMounts:
           - path: /etc/headscale
             readOnly: false
-      secrets:
+      config:
         type: secret
-        name: headscale-secrets
+        name: headscale-config
         advancedMounts:
           main:
             main:
               - path: /etc/headscale/config.yaml
                 readOnly: true
                 subPath: config.yaml
+      acl:
+        type: configmap
+        name: headscale-acl
+        advancedMounts:
+          main:
+            main:
               - path: /etc/headscale/acl.yaml
                 readOnly: true
                 subPath: acl.yaml
