@@ -6,6 +6,6 @@ resources:
   - ./coredns/ks.yaml
   - ./external-dns/ks.yaml
   - ./gateway-api/ks.yaml
-  # - ./headscale/ks.yaml
+  - ./headscale/ks.yaml
   - ./istio-system
   - ./unifi-controller/ks.yaml
