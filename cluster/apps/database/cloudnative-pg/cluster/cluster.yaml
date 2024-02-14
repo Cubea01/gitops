@@ -6,7 +6,7 @@ metadata:
   namespace: cloudnative-pg
 spec:
   instances: 3
-  imageName: tensorchord/pgvecto-rs:pg16-v0.1.11
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-17
   postgresGID: 26
   postgresUID: 26
   primaryUpdateStrategy: unsupervised
