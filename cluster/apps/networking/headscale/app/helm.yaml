@@ -82,6 +82,16 @@ spec:
             port: 50443
             protocol: TCP
     persistence:
+      data:
+        enabled: true
+        type: persistentVolumeClaim
+        storageClass: nfs-csi
+        accessMode: ReadWriteOnce
+        retain: true
+        size: 5Gi
+        globalMounts:
+          - path: /etc/headscale
+            readOnly: false
       secrets:
         type: secret
         name: headscale-secrets
@@ -94,9 +104,3 @@ spec:
               - path: /etc/headscale/acl.yaml
                 readOnly: true
                 subPath: acl.yaml
-              - path: /etc/headscale/noise_private.key
-                readOnly: true
-                subPath: noise_private.key
-              - path: /etc/headscale/private.key
-                readOnly: true
-                subPath: private.key
