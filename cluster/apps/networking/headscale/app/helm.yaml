@@ -38,7 +38,7 @@ spec:
           main:
             image:
               repository: ghcr.io/juanfont/headscale
-              tag: 0.22.3
+              tag: 0.23.0
               pullPolicy: IfNotPresent
             env:
               PUID: 1000
