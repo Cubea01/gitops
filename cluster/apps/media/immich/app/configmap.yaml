@@ -17,3 +17,4 @@ data:
   TRANSFORMERS_CACHE: /usr/src/app/.transformers_cache
   PUBLIC_IMMICH_SERVER_URL: https://photos.akchristiansen.com
   IMMICH_API_URL_EXTERNAL: /api
+  DB_VECTOR_EXTENSION: pgvector
