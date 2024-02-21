@@ -38,9 +38,9 @@ spec:
               app.kubernetes.io/name: immich-machine-learning
     controllers:
       main:
+        replicas: 2
         containers:
           main:
-            replicas: 2
             image:
               repository: ghcr.io/immich-app/immich-machine-learning
               tag: v1.95.1

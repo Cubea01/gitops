@@ -42,9 +42,9 @@ spec:
           - 65541
     controllers:
       main:
+        replicas: 2
         containers:
           main:
-            replicas: 2
             image:
               repository: ghcr.io/immich-app/immich-server
               tag: v1.95.1
