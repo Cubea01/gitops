@@ -1,7 +1,7 @@
 clusterName: k8s
 
 talosVersion: v1.6.4
-kubernetesVersion: 1.28.1
+kubernetesVersion: 1.29.1
 endpoint: https://k8s.akchristiansen.com:6443
 
 cniConfig:
@@ -76,7 +76,6 @@ controlPlane:
           - siderolabs/iscsi-tools
           - siderolabs/nonfree-kmod-nvidia
           - siderolabs/nvidia-container-toolkit
-          - siderolabs/tailscale
   patches:
     - "@./inlinemanifests.yaml"
     - |-
@@ -96,7 +95,7 @@ controlPlane:
       machine:
         kubelet:
           extraArgs:
-            feature-gates: CronJobTimeZone=true,GracefulNodeShutdown=true
+            feature-gates: GracefulNodeShutdown=true
             rotate-server-certificates: "true"
         network:
           extraHostEntries:
@@ -148,11 +147,3 @@ controlPlane:
               rsize=131072
               wsize=131072
               nconnect=8
-          - content: |
-              TS_AUTHKEY=${TS_AUTHKEY}
-              TS_ROUTES=${TS_ROUTES}
-              TS_EXTRA_ARGS=${TS_EXTRA_ARGS}
-              TS_ACCEPT_DNS=false
-            permissions: 0o644
-            path: /var/etc/tailscale/auth.env
-            op: create
