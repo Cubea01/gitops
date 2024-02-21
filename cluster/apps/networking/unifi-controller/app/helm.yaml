@@ -65,7 +65,6 @@ spec:
                 enabled: false
             resources:
               requests:
-                cpu: 1
                 memory: 1500Mi
           mongodb:
             image:
@@ -88,7 +87,6 @@ spec:
                 enabled: false
             resources:
               requests:
-                cpu: 500m
                 memory: 500Mi
             securityContext:
               runAsUser: 1000

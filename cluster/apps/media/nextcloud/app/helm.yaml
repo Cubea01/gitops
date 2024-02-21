@@ -90,10 +90,8 @@ spec:
         passwordKey: db-password
     resources:
       limits:
-        cpu: 4
         memory: 2000Mi
       requests:
-        cpu: 100m
         memory: 200Mi
     hpa:
       enabled: true

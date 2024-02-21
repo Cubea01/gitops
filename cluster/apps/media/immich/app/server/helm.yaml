@@ -59,7 +59,6 @@ spec:
                   name: immich-configmap
             resources:
               requests:
-                cpu: 100m
                 memory: 250Mi
               limits:
                 memory: 1000Mi

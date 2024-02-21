@@ -27,8 +27,6 @@ spec:
       max_slot_wal_keep_size: 10GB
       shared_buffers: 512MB
   resources:
-    requests:
-      cpu: 500m
     limits:
       memory: 4Gi
   monitoring:

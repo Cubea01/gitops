@@ -63,7 +63,6 @@ spec:
                 enabled: false
             resources:
               requests:
-                cpu: 4
                 memory: 7G
             securityContext:
               runAsUser: 1000
