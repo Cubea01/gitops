@@ -37,6 +37,9 @@ spec:
     controllers:
       main:
         replicas: 3
+        type: statefulset
+        statefulset:
+          podManagementPolicy: Parallel
         containers:
           main:
             image:
@@ -46,7 +49,14 @@ spec:
             envFrom:
               - secret: headscale-preauthkey
             env:
-              TS_KUBE_SECRET: ""
+              TS_KUBE_SECRET:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
+              TS_HOSTNAME:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
               TS_USERSPACE: false
               TS_ROUTES: 10.0.0.0/24,10.0.1.0/24,10.0.2.0/24,10.0.3.0/24,10.0.4.0/24,10.0.5.0/24,10.0.6.0/24
               TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com --snat-subnet-routes=false"
@@ -60,11 +70,12 @@ spec:
                 memory: 100Mi
               limits:
                 memory: 1000Mi
-            automountServiceAccountToken: true
             securityContext:
               privileged: true
               capabilities:
-                add: ["CAP_NET_ADMIN", "CAP_NET_RAW"]
+                add: ["CAP_NET_ADMIN"]
+    serviceAccount:
+      name: "subnet-router"
     service:
       main:
         enabled: false
