@@ -33,20 +33,10 @@ spec:
           derp:
             server:
               enabled: false
-              region_id: 999
-              region_code: "akchristiansen_network"
-              region_name: "AKChristiansen Network"
-              stun_listen_addr: "0.0.0.0:3478"
-              private_key_path: /etc/headscale/derp_server_private.key
-              automatically_add_embedded_derp_region: true
-              ipv4: 1.2.3.4
             urls:
               - https://controlplane.tailscale.com/derpmap/default
-            paths: []
-            auto_update_enabled: true
-            update_frequency: 24h
 
-          disable_check_updates: false
+          disable_check_updates: true
           ephemeral_node_inactivity_timeout: 30m
           node_update_check_interval: 10s
 
