@@ -49,7 +49,7 @@ spec:
               TS_KUBE_SECRET: ""
               TS_USERSPACE: false
               TS_ROUTES: 10.0.0.0/24,10.0.1.0/24,10.0.2.0/24,10.0.3.0/24,10.0.4.0/24,10.0.5.0/24,10.0.6.0/24
-              TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com"
+              TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com --snat-subnet-routes=false"
             probes:
               liveness: &probes
                 enabled: false
