@@ -44,7 +44,7 @@ spec:
           main:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.58.2
+              tag: v1.61.11
               pullPolicy: IfNotPresent
             envFrom:
               - secret: headscale-preauthkey
