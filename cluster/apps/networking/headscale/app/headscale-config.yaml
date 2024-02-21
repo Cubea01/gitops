@@ -17,36 +17,43 @@ spec:
         config.yaml: |
           ---
           server_url: https://headscale.akchristiansen.com
+
           listen_addr: 0.0.0.0:8080
           metrics_listen_addr: 0.0.0.0:9090
           grpc_listen_addr: 0.0.0.0:50443
-          grpc_allow_insecure: false
 
-          private_key_path: /etc/headscale/private.key
+          grpc_allow_insecure: false
 
           noise:
             private_key_path: /etc/headscale/noise_private.key
 
-          unix_socket: /tmp/headscale.sock
-          unix_socket_permission: "0770"
-
-          ip_prefixes:
-            - 100.64.0.0/10
+          prefixes:
+            v4: 100.64.0.0/10
 
           derp:
             server:
               enabled: false
+              region_id: 999
+              region_code: "akchristiansen_network"
+              region_name: "AKChristiansen Network"
+              stun_listen_addr: "0.0.0.0:3478"
+              private_key_path: /etc/headscale/derp_server_private.key
+              automatically_add_embedded_derp_region: true
+              ipv4: 1.2.3.4
             urls:
               - https://controlplane.tailscale.com/derpmap/default
+            paths: []
             auto_update_enabled: true
             update_frequency: 24h
 
-          disable_check_updates: true
+          disable_check_updates: false
           ephemeral_node_inactivity_timeout: 30m
           node_update_check_interval: 10s
 
-          db_type: sqlite3
-          db_path: /etc/headscale/db.sqlite
+          database:
+            type: sqlite
+            sqlite:
+              path: /etc/headscale/db.sqlite
 
           log:
             format: text
@@ -55,7 +62,9 @@ spec:
           acl_policy_path: ""
 
           dns_config:
+            base_domain: akchristiansen.com
             override_local_dns: true
+            magic_dns: false
             nameservers:
               - 94.140.14.14
               - 94.140.15.15
@@ -64,8 +73,9 @@ spec:
                 - 10.0.6.1
             domains:
               - akchristiansen.com
-            magic_dns: true
-            base_domain: akchristiansen.com
+
+          unix_socket: /tmp/headscale.sock
+          unix_socket_permission: "0770"
 
           oidc:
             only_start_if_oidc_is_available: true
