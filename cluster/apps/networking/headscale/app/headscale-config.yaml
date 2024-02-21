@@ -45,13 +45,8 @@ spec:
           ephemeral_node_inactivity_timeout: 30m
           node_update_check_interval: 10s
 
-          db_type: postgres
-          db_host: postgres-rw.cloudnative-pg.svc.cluster.local
-          db_port: 5432
-          db_name: headscale
-          db_user: headscale
-          db_pass: "{{ .db_pass }}"
-          db_ssl: false
+          db_type: sqlite3
+          db_path: /etc/headscale/db.sqlite
 
           log:
             format: text

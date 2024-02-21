@@ -71,28 +71,24 @@ spec:
         enabled: true
         ports:
           http:
-            enabled: true
             port: 8080
           metrics:
-            enabled: true
             port: 9090
-            protocol: TCP
           grpc:
-            enabled: true
             port: 50443
-            protocol: TCP
     persistence:
       data:
         enabled: true
         type: persistentVolumeClaim
-        storageClass: nfs-csi
+        storageClass: iscsi-csi
         accessMode: ReadWriteOnce
         retain: true
-        size: 5Gi
+        size: 10Gi
         globalMounts:
           - path: /etc/headscale
             readOnly: false
       config:
+        enabled: true
         type: secret
         name: headscale-config
         advancedMounts:
@@ -102,7 +98,8 @@ spec:
                 readOnly: true
                 subPath: config.yaml
       acl:
-        type: configmap
+        enabled: true
+        type: configMap
         name: headscale-acl
         advancedMounts:
           main:

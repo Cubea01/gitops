@@ -9,7 +9,7 @@ spec:
   path: ./cluster/apps/networking/headscale/app
   dependsOn:
     - name: cluster-apps-security-external-secrets-stores
-    - name: cluster-apps-database-cloudnative-pg-cluster
+    - name: cluster-apps-storage-csi-iscsi
     - name: cluster-apps-networking-istio-system-istiod
   prune: true
   sourceRef:
@@ -20,4 +20,25 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
       name: headscale
+      namespace: headscale
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-apps-networking-headscale-subnet-router
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./cluster/apps/networking/headscale/subnet-router
+  dependsOn:
+    - name: cluster-apps-networking-headscale
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: github
+  wait: true
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: subnet-router
       namespace: headscale

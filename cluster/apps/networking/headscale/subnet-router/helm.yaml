@@ -1,0 +1,76 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: subnet-router
+  namespace: headscale
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.6.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      hostNetwork: true
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: subnet-router
+    controllers:
+      main:
+        containers:
+          main:
+            replicas: 3
+            image:
+              repository: ghcr.io/tailscale/tailscale
+              tag: v1.56.1
+              pullPolicy: IfNotPresent
+            envFrom:
+              - secret: headscale-preauthkey
+            env:
+              TS_KUBE_SECRET: ""
+              TS_USERSPACE: false
+              TS_ROUTES: 10.0.0.0/24,10.0.1.0/24,10.0.2.0/24,10.0.3.0/24,10.0.4.0/24,10.0.5.0/24,10.0.6.0/24
+              TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com"
+            probes:
+              liveness: &probes
+                enabled: false
+              readiness: *probes
+              startup: *probes
+            resources:
+              requests:
+                cpu: 100m
+                memory: 100Mi
+              limits:
+                cpu: 1
+                memory: 1000Mi
+            automountServiceAccountToken: true
+            securityContext:
+              privileged: true
+              capabilities:
+                add: ["CAP_NET_ADMIN", "CAP_NET_RAW"]
+    service:
+      main:
+        enabled: false
+    persistence:
+      wireguard-tun:
+        type: hostPath
+        hostPath: /dev/net/tun
