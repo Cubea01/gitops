@@ -36,9 +36,9 @@ spec:
               app.kubernetes.io/name: subnet-router
     controllers:
       main:
+        replicas: 3
         containers:
           main:
-            replicas: 3
             image:
               repository: ghcr.io/tailscale/tailscale
               tag: v1.56.1
