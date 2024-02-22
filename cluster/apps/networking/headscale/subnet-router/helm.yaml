@@ -100,7 +100,7 @@ spec:
         ports:
           http:
             port: 0
-      0:
+      '0':
         enabled: true
         type: LoadBalancer
         controller: main
@@ -113,7 +113,7 @@ spec:
             enabled: true
             port: 179
             targetPort: 180
-      1:
+      '1':
         enabled: true
         type: LoadBalancer
         controller: main
@@ -126,7 +126,7 @@ spec:
             enabled: true
             port: 179
             targetPort: 180
-      2:
+      '2':
         enabled: true
         type: LoadBalancer
         controller: main
