@@ -44,7 +44,7 @@ spec:
           main:
             image:
               repository: ghcr.io/tailscale/tailscale
-              tag: v1.58.2
+              tag: v1.61.11
               pullPolicy: IfNotPresent
             envFrom:
               - secret: headscale-preauthkey
@@ -60,6 +60,7 @@ spec:
               TS_USERSPACE: false
               TS_ROUTES: 10.0.0.0/24,10.0.1.0/24,10.0.2.0/24,10.0.3.0/24,10.0.4.0/24,10.0.5.0/24,10.0.6.0/24
               TS_EXTRA_ARGS: "--login-server=https://headscale.akchristiansen.com --snat-subnet-routes=false"
+              TS_TAILSCALED_EXTRA_ARGS: "--bird-socket=/var/run/bird.ctl"
             probes:
               liveness: &probes
                 enabled: false
@@ -74,12 +75,85 @@ spec:
               privileged: true
               capabilities:
                 add: ["CAP_NET_ADMIN"]
+          bird:
+            image:
+              repository: ghcr.io/akafeng/bird
+              tag: 2.14
+              pullPolicy: IfNotPresent
+            probes:
+              liveness: &probes
+                enabled: false
+              readiness: *probes
+              startup: *probes
+            resources:
+              requests:
+                memory: 100Mi
+              limits:
+                memory: 1000Mi
     serviceAccount:
       name: "subnet-router"
     service:
       main:
         enabled: false
+        ports:
+          http:
+            port: 0
+      0:
+        enabled: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          io.cilium/lb-ipam-ips: 10.0.0.10
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: '0'
+        ports:
+          bgp:
+            enabled: true
+            port: 179
+            targetPort: 180
+      1:
+        enabled: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          io.cilium/lb-ipam-ips: 10.0.0.11
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: '1'
+        ports:
+          bgp:
+            enabled: true
+            port: 179
+            targetPort: 180
+      2:
+        enabled: true
+        type: LoadBalancer
+        controller: main
+        annotations:
+          io.cilium/lb-ipam-ips: 10.0.0.12
+        extraSelectorLabels:
+          apps.kubernetes.io/pod-index: '2'
+        ports:
+          bgp:
+            enabled: true
+            port: 179
+            targetPort: 180
     persistence:
       wireguard-tun:
+        enabled: true
         type: hostPath
         hostPath: /dev/net/tun
+      sockets:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
+      bird:
+        enabled: true
+        type: configMap
+        name: bgp-config
+        advancedMounts:
+          main:
+            bird:
+              - path: /etc/bird/bird.conf
+                readOnly: true
+                subPath: bird.conf

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bgp-config
+  namespace: headscale
+data:
+  bird.conf: |    
+    log syslog all;
+
+    protocol device {
+      scan time 10;
+    }
+
+    protocol bgp {
+      local port 180 as 65000;
+      neighbor 10.0.6.1 as 65000;
+      ipv4 {
+        import none;
+        export all;
+      };
+    }
+
+    protocol static tailscale {
+      ipv4;
+      route 100.64.0.0/10 via "tailscale0";
+    }
