@@ -36,6 +36,8 @@ spec:
               app.kubernetes.io/name: subnet-router
     controllers:
       main:
+        dependsOn:
+          - bird
         replicas: 3
         type: statefulset
         statefulset:
