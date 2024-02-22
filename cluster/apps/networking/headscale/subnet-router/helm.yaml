@@ -36,14 +36,14 @@ spec:
               app.kubernetes.io/name: subnet-router
     controllers:
       main:
-        dependsOn:
-          - bird
         replicas: 3
         type: statefulset
         statefulset:
           podManagementPolicy: Parallel
         containers:
           main:
+            dependsOn:
+              - bird
             image:
               repository: ghcr.io/tailscale/tailscale
               tag: v1.61.11
