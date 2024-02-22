@@ -79,7 +79,7 @@ spec:
                 add: ["CAP_NET_ADMIN"]
           bird:
             image:
-              repository: ghcr.io/akafeng/bird
+              repository: ghcr.io/cubea01/bird
               tag: 2.14
               pullPolicy: IfNotPresent
             probes:
