@@ -40,8 +40,3 @@ spec:
         port: 5432
       redis:
         host: "redis-master.redis.svc.cluster.local"
-    geoip:
-      enabled: true
-      accountId: ${geoip_accountid}
-      licenseKey: ${geoip_licensekey}
-      editionIds: "GeoLite2-City"
